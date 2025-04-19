@@ -29,7 +29,7 @@
         justify-content: center;
         gap: 20px;
         align-items: center;
-        padding: 10px 20px;
+				margin: 10px 0;
     }
 
     .guess-row-cell {
@@ -62,4 +62,5 @@
     .guess-row-cell[data-correct='partial'] {
         background-color: #ffcc8d;
     }
+
 </style>

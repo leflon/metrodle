@@ -39,7 +39,7 @@
 		}
 	}, 300); // Debounce to avoid overloading API with requests
 
-	const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
+	const handleInput: FormEventHandler<HTMLInputElement> = () => {
 		console.log('cc');
 		fetchResults(query);
 	};
@@ -82,6 +82,7 @@
 				width: 400px;
 				max-width: 100%;
 				display: flex;
+				z-index: 100;
     }
 
     input {

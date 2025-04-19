@@ -38,27 +38,29 @@
 		type="font/otf"
 		crossorigin="anonymous"
 	/>
-	<link
-		rel="preload"
-		as="font"
-		href="/fonts/Parisine Bold.otf"
-		type="font/otf"
-		crossorigin="anonymous"
-	/>
 </svelte:head>
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
 <div class="input-container">
+	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} />
 	<button tabindex={99} onclick={handleGuess}>Valider</button>
 	<button onclick={_e => reset()} disabled={!canReset}>Recommencer</button>
 </div>
+<div class="guess-container">
 <GuessHeader></GuessHeader>
 {#each guesses as guess, index (index)}
 	<GuessRow guess={guess} />
 {/each}
-{toGuess}
+</div>
 <style>
+    img {
+        display: block;
+        width: 400px;
+        max-width: 80%;
+        object-fit: contain;
+        margin: 20px auto;
+    }
 		.beta {
 				position: fixed;
 				background: red;
@@ -68,21 +70,38 @@
 				transform: rotate(45deg) translate(25%, -40%);
 				top: 0;
 				right: 0;
+				z-index: 99;
 		}
     .input-container {
         display: flex;
         justify-content: center;
+				position: sticky;
+				top: 0;
         align-items: center;
 				flex-wrap: wrap;
         gap: 20px;
         margin-top: 20px;
+				z-index: 90;
+				padding: 20px 10px;
     }
 
-		img {
-				display: block;
-				width: 400px;
-				max-width: 80%;
-				object-fit: contain;
-				margin: 20px auto;
+		.input-container button {
+        z-index: 99;
+		}
+
+		.input-container-blur {
+        position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 120%;
+        inset: 0;
+        backdrop-filter: blur(5px);
+        /* Gradient mask: fully transparent at bottom, opaque at top */
+        mask-image: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%);
+				z-index: 0;
+		}
+		.guess-container {
+				padding: 10px;
 		}
 </style>
