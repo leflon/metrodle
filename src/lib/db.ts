@@ -1,0 +1,44 @@
+import { Database } from 'bun:sqlite';
+import { removeAccents } from './utils';
+import type { Completion } from './models/completion.model';
+import type { Stop } from '$lib/models/stop.model';
+import type { Line } from '$lib/models/line.model';
+
+export const db = new Database('data/idfm.db', { create: true });
+db.exec('PRAGMA journal_mode = WAL');
+
+const randomStationQuery = db.query(
+	"SELECT s.id FROM Stops s JOIN StopLines sl ON sl.stop_id = s.id JOIN Lines l ON l.id = sl.line_id WHERE l.type = 'metro' ORDER BY RANDOM() LIMIT 1"
+);
+
+export function getRandomStop(): { id: string } {
+	const result = randomStationQuery.get() as { id: string };
+	return result;
+}
+
+const completionsQuery = db.prepare(
+	'SELECT id, name, plain_name FROM Stops WHERE plain_name LIKE ? OR plain_name LIKE ? LIMIT 5'
+);
+
+export function getCompletions(input: string): Completion[] {
+	input = removeAccents(input);
+	const result = completionsQuery.all(`${input}%`, `%${input}%`) as Completion[];
+	return result;
+}
+
+const fullStopQuery = db.prepare('SELECT * FROM Stops WHERE id = ?');
+const stopLinesQuery = db.prepare(
+	'SELECT * FROM Lines WHERE id IN (SELECT line_id FROM StopLines WHERE stop_id = ?)'
+);
+
+export function getStopData(id: string): { stop: Stop; lines: Line[] } | null {
+	const stop: Stop = fullStopQuery.get(id) as Stop;
+	if (!stop) {
+		return null;
+	}
+	const lines = stopLinesQuery.all(id) as Line[];
+	return {
+		stop,
+		lines
+	};
+}

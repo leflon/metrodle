@@ -1,13 +1,13 @@
 // This script fetches and formats metro stops data.
-import { Database } from 'bun:sqlite';
-const db = new Database('data/idfm.db', { create: true });
+import {Database} from 'bun:sqlite';
+const db = new Database('data/idfm.db', {create: true});
 db.exec('PRAGMA journal_mode = WAL');
 console.log('Initializing database');
 await db.run(
 	`CREATE TABLE IF NOT EXISTS Lines(id TEXT PRIMARY KEY, name TEXT, type TEXT, operator TEXT, color TEXT, textColor TEXT, picto TEXT)`
 );
 await db.run(
-	`CREATE TABLE IF NOT EXISTS Stops(id TEXT PRIMARY KEY, name TEXT, town TEXT, fare_zone TEXT, geo TEXT)`
+	`CREATE TABLE IF NOT EXISTS Stops(id TEXT PRIMARY KEY, name TEXT, plain_name TEXT, town TEXT, fare_zone TEXT, geo TEXT)`
 );
 await db.run(
 	`CREATE TABLE IF NOT EXISTS StopLines(stop_id TEXT, line_id TEXT, PRIMARY KEY(stop_id, line_id), FOREIGN KEY(stop_id) REFERENCES Stops(id), FOREIGN KEY(line_id) REFERENCES Lines(id))`
@@ -32,7 +32,7 @@ const fetchWithProgress = async (url) => {
 	let receivedLength = 0;
 	const chunks = [];
 	while (true) {
-		const { done, value } = await reader.read();
+		const {done, value} = await reader.read();
 		if (done) {
 			break;
 		}
@@ -54,7 +54,19 @@ const fetchWithProgress = async (url) => {
 	return JSON.parse(result);
 };
 
-const LOAD_LOCAL = true;
+function removeAccents(str) {
+	return str
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '');
+}
+
+const LOAD_LOCAL = process.argv.includes('--local') || process.argv.includes('-l');
+if (LOAD_LOCAL) {
+	console.log('Loading local data');
+} else {
+	console.log('Loading from IDFM Open Data');
+}
 
 console.log('Fetching Arrêts et Lignes associées');
 const stopsLines = await fetchWithProgress(
@@ -80,22 +92,20 @@ if (!LOAD_LOCAL) {
 	Bun.write('data/lines.json', JSON.stringify(lines, null, 2));
 }
 console.log('Formatting & saving data');
-const insertStop = db.query('INSERT OR IGNORE INTO Stops VALUES(?, ?, ?, ?, ?)');
+const insertStop = db.query('INSERT OR IGNORE INTO Stops VALUES(?, ?, ?, ?, ?, ?)');
 const insertLine = db.query('INSERT OR IGNORE INTO Lines VALUES(?, ?, ?, ?, ?, ?, ?)');
 const insertStopLine = db.query('INSERT OR IGNORE INTO StopLines VALUES(?, ?)');
 const lookup = db.query('SELECT * FROM Stops WHERE name = ? AND town = ?');
 
+// Ignoring Bus stops, this would make the game far too difficult and not fun.
 const interest = stops.filter((stop) => stop.arrtype !== 'bus');
 const n = interest.length;
-// Ignoring Bus stops, this would make the game far too difficult and not fun.
 interest.map((stop, i) => {
 	const stopLine = stopsLines.find(
 		(s) =>
 			s.stop_id.split(':').reverse()[0] === stop.arrid ||
 			s.stop_id.split(':').reverse()[0] === stop.zdaid
 	);
-	if (stop.arrtown.startsWith('Paris')) // We don't want to have district information.
-		stop.arrtown = 'Paris';
 	if (!stopLine) return;
 	const line = lines.find((l) => l.id_line === stopLine.id.split('IDFM:')[1]);
 	if (!line) return;
@@ -125,6 +135,7 @@ interest.map((stop, i) => {
 		insertStop.run([
 			stop.zdaid,
 			stop.arrname,
+			removeAccents(stop.arrname),
 			stop.arrtown,
 			stop.arrfarezone,
 			`${stop.arrgeopoint.lon}, ${stop.arrgeopoint.lat}`
