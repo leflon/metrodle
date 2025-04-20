@@ -90,7 +90,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	const guessGeo = guessedStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
 	const correctGeo = correctStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
 	const [d, angle] = distanceAndAngle(guessGeo, correctGeo);
-	console.log(d);
 	return json({
 		name,
 		lines,

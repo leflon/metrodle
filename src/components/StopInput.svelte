@@ -6,9 +6,10 @@
 
 	interface Props {
 		selected: string | null;
+		disabled: boolean;
 	}
 
-	let { selected = $bindable(null) }: Props = $props();
+	let { selected = $bindable(null)   }: Props = $props();
 	let query = $state('');
 	let completions: Completion[] = $state([]);
 	let isDropdownVisible = $state(false);
@@ -30,7 +31,6 @@
 			if (response.ok) {
 				completions = (await response.json()).completions;
 				isDropdownVisible = completions.length > 0;
-				console.log(isDropdownVisible);
 			} else {
 				console.error('Failed to fetch results');
 			}
@@ -40,7 +40,6 @@
 	}, 300); // Debounce to avoid overloading API with requests
 
 	const handleInput: FormEventHandler<HTMLInputElement> = () => {
-		console.log('cc');
 		fetchResults(query);
 	};
 
