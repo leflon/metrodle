@@ -52,9 +52,12 @@
 	}
 
 	function boldCompletion(completion: Completion) {
+		// HOTFIX: the RegEx can crash the game
+		return completion.name;
+		/*
 		const index = completion.plain_name.indexOf(plainify(query));
 		const boldSection = completion.name.substring(index, index + query.length);
-		return completion.name.replace(new RegExp(`(${boldSection})`), '<b>$1</b>');
+		return completion.name.replace(new RegExp(`(${boldSection})`), '<b>$1</b>');*/
 	}
 </script>
 
