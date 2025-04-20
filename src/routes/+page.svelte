@@ -5,6 +5,7 @@
 	import StopInput from '../components/StopInput.svelte';
 	import GuessRow from '../components/GuessRow.svelte';
 	import { Confetti } from 'svelte-confetti';
+	import Footer from '../components/Footer.svelte';
 
 	let { data }: { data: { stop: string } } = $props();
 	let toGuess = $state(data.stop);
@@ -21,7 +22,9 @@
 	async function handleGuess() {
 		if (selectedStop) {
 			const result = await fetch(`/api/guess?guess=${selectedStop}&correct=${toGuess}`);
-			guesses.push(await result.json());
+			const res = await result.json();
+			for (let i = 0; i < 10; i++)
+				guesses.push(res);
 			selectedStop = null;
 			setTimeout(() => {
 				if (!document.scrollingElement) return;
@@ -99,6 +102,7 @@
 		<button onclick={reset}>Rejouer</button>
 	</div>
 {/if}
+<Footer></Footer>
 <style>
 	img {
 		display: block;

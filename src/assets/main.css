@@ -27,6 +27,9 @@ body {
 	margin: 0;
 	background: url('/tiles.png');
 	background-size: 100px;
+	display: flex;
+	flex-direction: column;
+	min-height: 100svh;
 }
 
 button {
