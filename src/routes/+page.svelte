@@ -22,9 +22,7 @@
 	async function handleGuess() {
 		if (selectedStop) {
 			const result = await fetch(`/api/guess?guess=${selectedStop}&correct=${toGuess}`);
-			const res = await result.json();
-			for (let i = 0; i < 10; i++)
-				guesses.push(res);
+			guesses.push(await result.json());
 			selectedStop = null;
 			setTimeout(() => {
 				if (!document.scrollingElement) return;
@@ -86,6 +84,11 @@
 	{#each guesses as guess, index (index)}
 		<GuessRow guess={guess} />
 	{/each}
+	{#if guesses.length === 0 }
+		<div out:fade={{duration: 200}} in:fade={{delay: 500}} class="start-hint">
+			Essayez de deviner la station !
+		</div>
+	{/if}
 </div>
 {#if hasWon}
 	<div class="confetti-container">
@@ -122,6 +125,12 @@
 		top: 0;
 		right: 0;
 		z-index: 99;
+	}
+
+	.start-hint {
+		font: bold 18pt 'Parisine';
+		text-align: center;
+		margin: 30px 0;
 	}
 
 	.confetti-container {
