@@ -1,5 +1,5 @@
 <p align='center'>
-  <img src='/static/logo.png' alt='Metrodle' width='256' />
+  <img src='/static/github-splash.png' alt='Metrodle' width='512' />
   <h2 align='center'>Wordle for Paris Metro stations</h2>
 </p>
 <p align='center'>
