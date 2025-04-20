@@ -19,6 +19,13 @@
 			const result = await fetch(`/api/guess?guess=${selectedStop}&correct=${toGuess}`);
 			guesses.push(await result.json());
 			selectedStop = null;
+			setTimeout(() => {
+				if (!document.scrollingElement) return;
+				document.scrollingElement.scrollTo({
+					top:
+					document.scrollingElement.scrollHeight
+				});
+			});
 		}
 	}
 
@@ -41,6 +48,7 @@
 		crossorigin="anonymous"
 	/>
 </svelte:head>
+
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
 <div class="input-container">
@@ -56,7 +64,7 @@
 	{/each}
 </div>
 {#if hasWon}
-	<div class="won" 	in:fade={{delay: 200}} out:fade={{duration: 0}}>
+	<div class="won" in:fade={{delay: 200}} out:fade={{duration: 0}}>
 		<button onclick={_e => reset()}>Rejouer</button>
 	</div>
 {/if}
@@ -91,7 +99,7 @@
         gap: 20px;
         margin-top: 20px;
         z-index: 90;
-        padding: 20px 10px;
+        padding: 20px 5px;
     }
 
     .input-container button {
@@ -106,18 +114,13 @@
         height: 120%;
         inset: 0;
         backdrop-filter: blur(5px);
-        /* Gradient mask: fully transparent at bottom, opaque at top */
         mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 30%);
         z-index: 0;
     }
 
-    .guess-container {
+    .won {
         padding: 10px;
+        display: flex;
+        justify-content: center;
     }
-
-		.won {
-				margin: 10px;
-				display: flex;
-				justify-content: center;
-		}
 </style>

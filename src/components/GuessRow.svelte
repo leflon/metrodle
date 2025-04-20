@@ -48,37 +48,40 @@
 
 
 <style>
+
     .guess-row {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
+				display: grid;
+        grid-template-columns: repeat(6, minmax(50px, 1fr) );
         align-items: center;
-        margin: 10px 0;
+				width: 800px;
+				gap: 30px;
+				min-height: 40px;
+        margin: 10px auto;
     }
 
     .guess-row-cell {
-        text-align: center;
-        width: 100px;
-        padding: 8px 0;
-        border-radius: 10px;
-    }
-
-    .guess-row-cell.name {
-        width: 300px;
-    }
-
-    .guess-row-cell.lines {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 5px;
-        cursor: help;
-    }
-
-		.guess-row-cell.distance {
 				display: flex;
 				justify-content: center;
 				align-items: center;
+        padding: 8px 0;
+				height: 100%;
+        border-radius: 10px;
+				overflow-x: auto;
+				text-align: center;
+    }
+
+		.guess-row-cell.name {
+				grid-column-end: span 2;
+		}
+
+    .guess-row-cell.lines {
+        gap: 5px;
+        cursor: help;
+				flex-wrap: wrap;
+        overflow-x: auto;
+    }
+
+		.guess-row-cell.distance {
 				gap: 5px;
 		}
 
@@ -99,6 +102,39 @@
         background: #0E0F4F;
         color: white;
         font-size: 16pt;
+				font-weight: bold;
+				overflow: hidden;
     }
 
+    @media screen and (max-width: 850px) {
+        .guess-row-cell {
+            font-size: 9pt;
+            padding: 5px;
+						border-radius: 0;
+						text-align: center;
+        }
+        .guess-row-cell[data-correct='neutral'] {
+            font-size: 10pt;
+            justify-content: center;
+        }
+				.guess-row {
+						gap: 0;
+						width: 100%;
+						box-sizing: border-box;
+						margin: 10px auto;
+				}
+
+				.guess-row-cell.lines {
+						flex-wrap: wrap;
+						gap: 1px;
+				}
+
+				.guess-row-cell.distance {
+						gap: 1px;
+				}
+
+				.guess-row-cell img {
+						width: 16px;
+				}
+    }
 </style>
