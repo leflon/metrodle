@@ -29,7 +29,7 @@ This game is just like *Wordle*, but you guess Paris metro stations. Rather than
 </p>
 
 ## Installation
-1. Clone this repository
+### Clone this repository
 ```bash
 git clone https://github.com/leflon/metrodle
 ```
@@ -37,14 +37,43 @@ or
 ```
 gh repo clone leflon/metrodle
 ```
-2. Install dependencies
 
-This project was made for bun. You can totally run it on Node.js and *probably* Deno, but you will need to change some `package.json` scripts beforehand.
+### Install environment
+
+This project was built **for Bun** and relies on `bun:sqlite` to work. 
+
+*If you do not have Bun installed:*
+
+**Linux & MacOS**
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+**Windows**
+```bash
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+
+### Install dependencies
 ```bash
 bun install
 ```
-3. Start the dev environment
+
+### Fetch necessary data
+
+This project relies on the **Ile-de-France Mobilités OpenData API** to retrieve all metro lines and stops data.
+
+To populate your SQLite database with this data, run the **fetch.js** script:
+```bash
+bun fetch.js [--wipe|-w] [--local|-l]
+```
+**Arguments:**
+ - `--wipe, -w`: Wipes the previous content of your database. By default, it will keep everything as it an only add new entries.
+ - `--local, -l`: When you fetch from the OpenData, notice that you have three json files stored, corresponding to the plain downloaded data. To avoid remotely fetching everytime, by default, the script will use the local data to function.
+
+### Start the dev environment
 ```bash
 bun run dev
 ```
 
+## Author
+Paul Leflon
