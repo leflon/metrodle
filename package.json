@@ -35,7 +35,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"add": "^2.0.6",
 		"lodash": "^4.17.21",
-		"sqlite": "^5.1.1"
+		"sqlite": "^5.1.1",
+		"svelte-confetti": "2.3.1"
 	}
 }

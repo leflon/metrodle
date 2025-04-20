@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import StopInput from '../components/StopInput.svelte';
 	import GuessRow from '../components/GuessRow.svelte';
+	import { Confetti } from 'svelte-confetti';
 
 	let { data }: { data: { stop: string } } = $props();
 	let toGuess = $state(data.stop);
@@ -25,8 +26,7 @@
 			setTimeout(() => {
 				if (!document.scrollingElement) return;
 				document.scrollingElement.scrollTo({
-					top:
-					document.scrollingElement.scrollHeight
+					top: document.scrollingElement.scrollHeight
 				});
 			});
 		}
@@ -59,8 +59,15 @@
 		type="font/otf"
 		crossorigin="anonymous"
 	/>
+	<link
+		rel="preload"
+		as="font"
+		href="/fonts/Parisine Bold.otf"
+		type="font/otf"
+		crossorigin="anonymous"
+	/>
+	<title>Metrodle</title>
 </svelte:head>
-
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
 <div class={'input-container ' + inputContainerClass}
@@ -69,7 +76,7 @@
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon} />
 	<button tabindex={99} onclick={handleGuess}>Valider</button>
-	<button onclick={_e => reset()} disabled={!canReset}>Recommencer</button>
+	<button onclick={reset} disabled={!canReset}>Recommencer</button>
 </div>
 <div class="guess-container">
 	<GuessRow />
@@ -78,69 +85,85 @@
 	{/each}
 </div>
 {#if hasWon}
+	<div class="confetti-container">
+		<Confetti
+			colorArray={["#FFCE00", "#0064B0", "#9F9825", "#98D4E2", "#C04191", "#F28E42", "#83C491", "#F3A4BA", "#CEADD2", "#D5C900", "#E3B32A", "#8D5E2A", "#00814F", "#662483", "#B90845", "#00A88F"]}
+			x={[-1.5,1.5]}
+			y={[0,3]}
+			fallDistance="100px"
+			amount={400}
+			cone={true}
+			size={10} />
+	</div>
 	<div class="won" in:fade={{delay: 200}} out:fade={{duration: 0}}>
-		<button onclick={_e => reset()}>Rejouer</button>
+		<button onclick={reset}>Rejouer</button>
 	</div>
 {/if}
 <style>
-    img {
-        display: block;
-        width: 400px;
-        max-width: 80%;
-        object-fit: contain;
-        margin: 20px auto;
-    }
+	img {
+		display: block;
+		width: 400px;
+		max-width: 80%;
+		object-fit: contain;
+		margin: 20px auto;
+	}
 
-    .beta {
-        position: fixed;
-        background: red;
-        color: white;
-        font: 14pt 'Parisine';
-        padding: 5px 40px;
-        transform: rotate(45deg) translate(25%, -40%);
-        top: 0;
-        right: 0;
-        z-index: 99;
-    }
+	.beta {
+		position: fixed;
+		background: red;
+		color: white;
+		font: 14pt 'Parisine';
+		padding: 5px 40px;
+		transform: rotate(45deg) translate(25%, -40%);
+		top: 0;
+		right: 0;
+		z-index: 99;
+	}
 
-    .input-container {
-        display: flex;
-        justify-content: center;
-        position: sticky;
-        top: 0;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-top: 20px;
-        z-index: 90;
-        padding: 20px 5px;
-    }
+	.confetti-container {
+		position: fixed;
+		bottom: 0;
+		left: 50%;
+	}
 
-    .input-container button {
-        z-index: 99;
-    }
+	.input-container {
+		display: flex;
+		justify-content: center;
+		position: sticky;
+		top: 0;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 20px;
+		margin-top: 20px;
+		z-index: 90;
+		padding: 20px 5px;
+	}
 
-    .input-container-blur {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 120%;
-        inset: 0;
-        backdrop-filter: blur(5px);
-        mask-image: linear-gradient(to top, transparent 0%, #000F 40%);
-        z-index: 0;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
+	.input-container button {
+		z-index: 99;
+	}
 
-    .input-container.sticked .input-container-blur {
-        opacity: 1;
-    }
+	.input-container-blur {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 120%;
+		inset: 0;
+		backdrop-filter: blur(5px);
+		mask-image: linear-gradient(to top, transparent 0%, #000F 40%);
+		z-index: 0;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
 
-    .won {
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-    }
+	.input-container.sticked .input-container-blur {
+		opacity: 1;
+	}
+
+	.won {
+		padding: 10px;
+		display: flex;
+		justify-content: center;
+	}
 </style>

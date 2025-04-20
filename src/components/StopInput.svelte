@@ -78,45 +78,45 @@
 </div>
 
 <style>
-    .stop-input {
-        position: relative;
-				width: 400px;
-				max-width: 100%;
-				display: flex;
-				z-index: 100;
-    }
+	.stop-input {
+		position: relative;
+		width: 400px;
+		max-width: 100%;
+		display: flex;
+		z-index: 100;
+	}
 
-    input {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 10px;
-        font: 16px 'Parisine';
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	input {
+		box-sizing: border-box;
+		width: 100%;
+		padding: 10px;
+		font: 16px 'Parisine';
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    .dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-    }
+	.dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: white;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		max-height: 200px;
+		overflow-y: auto;
+		z-index: 10;
+	}
 
-    .dropdown-item {
-        padding: 10px;
-        cursor: pointer;
-    }
+	.dropdown-item {
+		padding: 10px;
+		cursor: pointer;
+	}
 
-    .dropdown-item:hover,
-    .dropdown-item:focus {
-        background: #f0f0f0;
-    }
+	.dropdown-item:hover,
+	.dropdown-item:focus {
+		background: #f0f0f0;
+	}
 </style>
