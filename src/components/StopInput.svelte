@@ -9,7 +9,7 @@
 		disabled: boolean;
 	}
 
-	let { selected = $bindable(null)   }: Props = $props();
+	let { selected = $bindable(null), disabled = false }: Props = $props();
 	let query = $state('');
 	let completions: Completion[] = $state([]);
 	let isDropdownVisible = $state(false);
@@ -20,7 +20,7 @@
 	});
 
 	const fetchResults = debounce(async (searchTerm) => {
-		if (!searchTerm) {
+		if (!searchTerm || disabled) {
 			completions = [];
 			isDropdownVisible = false;
 			return;
@@ -40,10 +40,12 @@
 	}, 300); // Debounce to avoid overloading API with requests
 
 	const handleInput: FormEventHandler<HTMLInputElement> = () => {
-		fetchResults(query);
+		if (!disabled)
+			fetchResults(query);
 	};
 
 	function selectResult(result: Completion) {
+		if (disabled) return;
 		query = result.name;
 		selected = result.id;
 		isDropdownVisible = false;

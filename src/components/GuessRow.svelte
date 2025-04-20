@@ -4,7 +4,6 @@
 
 	type Props = {
 		guess?: Guess;
-		isHeader: boolean
 	};
 	let { guess }: Props = $props();
 
