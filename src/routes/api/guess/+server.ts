@@ -3,12 +3,13 @@ import { getStopData } from '$lib/db';
 import type { GuessEntry } from '$lib/models/guess.model';
 
 
-function distance(geo1: [number, number], geo2: [number, number]): number {
-	const [lat1, lon1] = geo1;
-	const [lat2, lon2] = geo2;
+function distanceAndAngle(geo1: [number, number], geo2: [number, number]): [number, number] {
+	const [lon1, lat1] = geo1;
+	const [lon2, lat2] = geo2;
 
 	const R = 6371000; // Earth's radius in meters
 	const toRad = (deg: number) => (deg * Math.PI) / 180;
+	const toDeg = (rad: number) => (rad * 180) / Math.PI;
 
 	const dLat = toRad(lat2 - lat1);
 	const dLon = toRad(lon2 - lon1);
@@ -18,8 +19,17 @@ function distance(geo1: [number, number], geo2: [number, number]): number {
 		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
 
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	const distance = R * c;
 
-	return R * c; // Distance in meters
+	// Calculate bearing (angle from North)
+	const y = Math.sin(dLon) * Math.cos(toRad(lat2));
+	const x =
+		Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+		Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon);
+	let bearing = Math.atan2(y, x);
+	bearing = (toDeg(bearing) + 360) % 360; // Normalize to 0-360
+
+	return [distance, bearing];
 }
 
 
@@ -79,7 +89,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const guessGeo = guessedStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
 	const correctGeo = correctStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
-	const d = distance(guessGeo, correctGeo);
+	const [d, angle] = distanceAndAngle(guessGeo, correctGeo);
 	console.log(d);
 	return json({
 		name,
@@ -87,7 +97,10 @@ export const GET: RequestHandler = async ({ url }) => {
 		town,
 		zone,
 		distance: {
-			value: d,
+			value: {
+				distance:d,
+				angle
+			},
 			correct: guess === correct ? 'correct' : 'partial'
 		},
 		isCorrect: guess === correct

@@ -66,6 +66,7 @@ const fetchWithProgress = async (url) => {
 
 function removeAccents(str) {
 	return str
+		.replace(/[ -]/g, '')
 		.toLowerCase()
 		.normalize('NFD')
 		.replace(/[\u0300-\u036f]/g, '');
@@ -138,7 +139,6 @@ interest.map((stop) => {
 	]);
 	const res = lookup.get([stop.arrname, stop.arrtown]);
 	if (res) {
-		console.log(res);
 		insertStopLine.run([res.id, line.id_line]);
 	} else {
 		insertStop.run([

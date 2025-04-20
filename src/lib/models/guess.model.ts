@@ -14,6 +14,6 @@ export type Guess = {
 	}[]>,
 	town: GuessEntry,
 	zone: GuessEntry,
-	distance: GuessEntry<number>
+	distance: GuessEntry<{distance: number, angle: number}>
 	isCorrect: boolean,
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { debounce } from 'lodash';
 	import type { Completion } from '$lib/models/completion.model';
-	import { removeAccents } from '$lib/utils';
+	import { plainify } from '$lib/utils';
 	import type { FormEventHandler } from 'svelte/elements';
 
 	interface Props {
@@ -51,7 +51,7 @@
 	}
 
 	function boldCompletion(completion: Completion) {
-		const index = completion.plain_name.indexOf(removeAccents(query));
+		const index = completion.plain_name.indexOf(plainify(query));
 		const boldSection = completion.name.substring(index, index + query.length);
 		return completion.name.replace(new RegExp(`(${boldSection})`), '<b>$1</b>');
 	}

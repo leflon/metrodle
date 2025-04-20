@@ -1,5 +1,5 @@
 import { Database } from 'bun:sqlite';
-import { removeAccents } from './utils';
+import { plainify } from './utils';
 import type { Completion } from './models/completion.model';
 import type { Stop } from '$lib/models/stop.model';
 import type { Line } from '$lib/models/line.model';
@@ -12,8 +12,7 @@ const randomStationQuery = db.query(
 );
 
 export function getRandomStop(): { id: string } {
-	const result = randomStationQuery.get() as { id: string };
-	return result;
+	return randomStationQuery.get() as { id: string };
 }
 
 const completionsQuery = db.prepare(
@@ -21,9 +20,8 @@ const completionsQuery = db.prepare(
 );
 
 export function getCompletions(input: string): Completion[] {
-	input = removeAccents(input);
-	const result = completionsQuery.all(`${input}%`, `%${input}%`) as Completion[];
-	return result;
+	input = plainify(input);
+	return completionsQuery.all(`${input}%`, `%${input}%`) as Completion[];
 }
 
 const fullStopQuery = db.prepare('SELECT * FROM Stops WHERE id = ?');
