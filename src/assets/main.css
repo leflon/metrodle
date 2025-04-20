@@ -1,7 +1,6 @@
 :root {
 	--primary-color: #02C4B4;
 	--secondary-color: #02a396;
-	color-scheme: light dark;
 }
 
 
@@ -17,8 +16,8 @@
 body {
 	font-family: 'Parisine', serif;
 	margin: 0;
-	background: light-dark(#fff, #222222);
-	color: light-dark(#fff, #222222);
+	background: url('/tiles.png');
+	background-size: 100px;
 }
 
 button {

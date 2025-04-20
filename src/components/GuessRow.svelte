@@ -1,25 +1,32 @@
 <script lang="ts">
 	import type { Guess } from '$lib/models/guess.model';
+	import {blur} from 'svelte/transition';
 
 	type Props = {
-		guess: Guess;
+		guess?: Guess;
+		isHeader: boolean
 	};
 	let { guess }: Props = $props();
+
 </script>
 
-<div class="guess-row">
+<div class="guess-row" transition:blur>
 	<div class="guess-row-cell name"
-			 data-correct={guess.name.correct}>{guess.name.value}</div>
+			 data-correct={guess ? guess.name.correct : 'neutral'}>{guess ? guess.name.value : 'Nom'}</div>
 	<div class="guess-row-cell lines"
 			 title="Vert si toutes les lignes sont correctes, orange si certaines le sont, rouge si aucune n'est correcte"
-			 data-correct={guess.lines.correct}>
-		{#each guess.lines.value as line (line.name)}
-			<img src={line.picto} alt={line.name} width={28} />
-		{/each}
+			 data-correct={guess ? guess.lines.correct : 'neutral'}>
+		{#if guess}
+			{#each guess.lines.value as line (line.name)}
+				<img src={line.picto} alt={line.name} width={28} />
+			{/each}
+		{:else}
+			Lignes
+		{/if}
 	</div>
-	<div class="guess-row-cell" data-correct={guess.town.correct}>{guess.town.value}</div>
-	<div class="guess-row-cell" data-correct={guess.zone.correct}>{guess.zone.value}</div>
-	<div class="guess-row-cell" data-correct={guess.distance.correct}>{guess.distance.value.toFixed(0)}m</div>
+	<div class="guess-row-cell" data-correct={guess ? guess.town.correct : 'neutral'}>{guess ? guess.town.value : 'Ville'}</div>
+	<div class="guess-row-cell" data-correct={guess ? guess.zone.correct : 'neutral'}>{guess ? guess.zone.value : 'Zone'}</div>
+	<div class="guess-row-cell" data-correct={guess ? guess.distance.correct : 'neutral'}>{guess ? guess.distance.value.toFixed(0) + 'm' : 'Distance'}</div>
 </div>
 
 
@@ -62,5 +69,12 @@
     .guess-row-cell[data-correct='partial'] {
         background-color: #ffcc8d;
     }
+
+		.guess-row-cell[data-correct='neutral'] {
+				border-radius: 0;
+				background: #0E0F4F;
+				color: white;
+				font-size: 16pt;
+		}
 
 </style>

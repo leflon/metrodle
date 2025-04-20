@@ -1,7 +1,6 @@
 <script lang='ts'>
 	import '../assets/main.css';
 	import type {Guess} from '$lib/models/guess.model';
-	import GuessHeader from '../components/GuessHeader.svelte';
 	import StopInput from '../components/StopInput.svelte';
 	import GuessRow from '../components/GuessRow.svelte';
 
@@ -48,10 +47,10 @@
 	<button onclick={_e => reset()} disabled={!canReset}>Recommencer</button>
 </div>
 <div class="guess-container">
-<GuessHeader></GuessHeader>
-{#each guesses as guess, index (index)}
-	<GuessRow guess={guess} />
-{/each}
+	<GuessRow isHeader={true} />
+	{#each guesses as guess, index (index)}
+		<GuessRow guess={guess} />
+	{/each}
 </div>
 <style>
     img {

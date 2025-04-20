@@ -2,6 +2,16 @@
 import {Database} from 'bun:sqlite';
 const db = new Database('data/idfm.db', {create: true});
 db.exec('PRAGMA journal_mode = WAL');
+
+const WIPE_DATA = process.argv.includes('--wipe') || process.argv.includes('-w');
+
+if (WIPE_DATA) {
+	console.log('Deleting previous data.')
+	await db.run('DROP TABLE IF EXISTS Lines');
+	await db.run('DROP TABLE IF EXISTS Stops');
+	await db.run('DROP TABLE IF EXISTS StopLines');
+}
+
 console.log('Initializing database');
 await db.run(
 	`CREATE TABLE IF NOT EXISTS Lines(id TEXT PRIMARY KEY, name TEXT, type TEXT, operator TEXT, color TEXT, textColor TEXT, picto TEXT)`
@@ -99,8 +109,7 @@ const lookup = db.query('SELECT * FROM Stops WHERE name = ? AND town = ?');
 
 // Ignoring Bus stops, this would make the game far too difficult and not fun.
 const interest = stops.filter((stop) => stop.arrtype !== 'bus');
-const n = interest.length;
-interest.map((stop, i) => {
+interest.map((stop) => {
 	const stopLine = stopsLines.find(
 		(s) =>
 			s.stop_id.split(':').reverse()[0] === stop.arrid ||
@@ -113,7 +122,7 @@ interest.map((stop, i) => {
 	if (line.shortname_line === 'TER') return;
 	//process.stdout.write(`\r${i + 1}/${n} (${line.shortname_line} - ${stop.arrname})`);
 	// Checking tram type by line name since some lines are under the Transilien network.
-	const tramTest = /T\d{1,2}[a|b|c]?/g; // T1c is a potential future line.
+	const tramTest = /T\d{1,2}[abc]?/g; // T1c is a potential future line.
 	insertLine.run([
 		line.id_line,
 		line.name_line,
