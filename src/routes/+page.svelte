@@ -10,9 +10,12 @@
 	let selectedStop = $state(null);
 	let guesses: Guess[] = $state([]);
 
+	let inputContainerClass = $state('');
 
 	let canReset = $derived(guesses.length > 0);
 	let hasWon = $derived(guesses.find(g => g.isCorrect) !== undefined);
+
+	let inputContainer: HTMLDivElement;
 
 	async function handleGuess() {
 		if (selectedStop) {
@@ -37,7 +40,16 @@
 		const res = await fetch(`/api/random-station`);
 		toGuess = (await res.json()).id;
 	};
+
+	const handleScroll = () => {
+		if (!inputContainer) return;
+		const y = inputContainer!.getBoundingClientRect().top;
+		inputContainerClass = y > 0 ? '' : 'sticked';
+
+	};
 </script>
+
+<svelte:document onscroll={handleScroll}></svelte:document>
 
 <svelte:head>
 	<link
@@ -51,7 +63,9 @@
 
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
-<div class="input-container">
+<div class={'input-container ' + inputContainerClass}
+		 bind:this={inputContainer}
+>
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon} />
 	<button tabindex={99} onclick={handleGuess}>Valider</button>
@@ -114,8 +128,14 @@
         height: 120%;
         inset: 0;
         backdrop-filter: blur(5px);
-        mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 30%);
+        mask-image: linear-gradient(to top, transparent 0%, #000F 40%);
         z-index: 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .input-container.sticked .input-container-blur {
+        opacity: 1;
     }
 
     .won {
