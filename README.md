@@ -70,6 +70,9 @@ bun fetch.js [--wipe|-w] [--local|-l]
  - `--wipe, -w`: Wipes the previous content of your database. By default, it will keep everything as it an only add new entries.
  - `--local, -l`: When you fetch from the OpenData, notice that you have three json files stored, corresponding to the plain downloaded data. To avoid remotely fetching everytime, by default, the script will use the local data to function.
 
+### Populate env variables
+Rename `.env.example` to `.env` and fill in the values.
+
 ### Start the dev environment
 ```bash
 bun run dev
