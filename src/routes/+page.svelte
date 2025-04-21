@@ -19,6 +19,22 @@
 
 	let inputContainer: HTMLDivElement;
 
+	$effect(() => {
+		if (hasWon === true) {
+			fetch('/api/send-game', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					toGuess: toGuess,
+					guesses: guesses,
+					userAction: 'finished'
+				})
+			});
+		}
+	});
+
 	async function handleGuess() {
 		if (selectedStop) {
 			const result = await fetch(`/api/guess?guess=${selectedStop}&correct=${toGuess}`);
@@ -33,9 +49,23 @@
 		}
 	}
 
+
 	const reset = async () => {
 		if (guesses.length === 0)
 			return;
+		if (!hasWon) {
+			fetch('/api/send-game', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					toGuess: toGuess,
+					guesses: guesses,
+					userAction: 'reset'
+				})
+			})
+		}
 		guesses = [];
 		selectedStop = null;
 		const res = await fetch(`/api/random-station`);
@@ -46,12 +76,28 @@
 		if (!inputContainer) return;
 		const y = inputContainer!.getBoundingClientRect().top;
 		inputContainerClass = y > 0 ? '' : 'sticked';
+	};
 
+	const handleBeforeUnload = () => {
+		if (!hasWon) {
+			fetch('/api/send-game', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					toGuess: toGuess,
+					guesses: guesses,
+					userAction: 'leaveApp'
+				})
+			});
+		}
 	};
 </script>
 
 <svelte:document onscroll={handleScroll}></svelte:document>
 
+<svelte:window onbeforeunload={handleBeforeUnload}></svelte:window>
 <svelte:head>
 	<link
 		rel="preload"

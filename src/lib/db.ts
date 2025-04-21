@@ -40,3 +40,4 @@ export function getStopData(id: string): { stop: Stop; lines: Line[] } | null {
 		lines
 	};
 }
+
