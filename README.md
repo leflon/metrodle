@@ -2,13 +2,12 @@
   <img src='/static/github-splash.png' alt='Metrodle' width='512' />
   <h2 align='center'>Wordle for Paris Metro stations</h2>
 </p>
-<p align='center'>
-<p align='center'>
+<p align='center'>  
   <img src='https://img.shields.io/badge/BUN-F472B6?logo=bun&style=for-the-badge'>
   <img src="https://img.shields.io/badge/typescript-3178c6?logo=typescript&style=for-the-badge&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/svelte-F63B01?logo=svelte&style=for-the-badge&logoColor=white" alt="Svelte">
   <img src="https://img.shields.io/badge/sqlite-1179C8?logo=sqlite&style=for-the-badge&logoColor=white" alt="SQLite">
-    <img src="https://img.shields.io/badge/OpenData%20IDFM-63B5F6?logo=iledefrancemobilites&logoColor=white&style=for-the-badge" alt="OpenData IDFM">
+  <img src="https://img.shields.io/badge/OpenData%20IDFM-63B5F6?logo=iledefrancemobilites&logoColor=white&style=for-the-badge" alt="OpenData IDFM">
   <img src="https://img.shields.io/badge/eslint-4B32C3?logo=eslint&style=for-the-badge" alt="ESlint">
   <img src="https://img.shields.io/badge/prettier-1b2b35?logo=prettier&style=for-the-badge" alt="Prettier">
 </p>
