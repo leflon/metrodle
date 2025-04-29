@@ -6,9 +6,12 @@
 	import GuessRow from '../components/GuessRow.svelte';
 	import { Confetti } from 'svelte-confetti';
 	import Footer from '../components/Footer.svelte';
+	import { onMount } from 'svelte';
+	import { getRandomStation, sendGame, sendGuess } from '$lib/api';
+	import { storage } from '$lib/storage.js';
+	import SettingsSelector from '../components/SettingsSelector.svelte';
 
-	let { data }: { data: { stop: string } } = $props();
-	let toGuess = $state(data.stop);
+	let toGuess: string | null = $state(null);
 	let selectedStop = $state(null);
 	let guesses: Guess[] = $state([]);
 
@@ -19,26 +22,18 @@
 
 	let inputContainer: HTMLDivElement;
 
+	onMount(async () => {
+		toGuess = await getRandomStation($storage.enabledTypes);
+	});
+
 	$effect(() => {
-		if (hasWon === true) {
-			fetch('/api/send-game', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					toGuess: toGuess,
-					guesses: guesses,
-					userAction: 'finished'
-				})
-			});
-		}
+		if (hasWon === true)
+			sendGame(guesses, toGuess!, 'finished');
 	});
 
 	async function handleGuess() {
 		if (selectedStop) {
-			const result = await fetch(`/api/guess?guess=${selectedStop}&correct=${toGuess}`);
-			guesses.push(await result.json());
+			guesses.push(await sendGuess(selectedStop, toGuess!));
 			selectedStop = null;
 			setTimeout(() => {
 				if (!document.scrollingElement) return;
@@ -53,19 +48,8 @@
 	const reset = async () => {
 		if (guesses.length === 0)
 			return;
-		if (!hasWon) {
-			fetch('/api/send-game', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					toGuess: toGuess,
-					guesses: guesses,
-					userAction: 'reset'
-				})
-			})
-		}
+		if (!hasWon)
+			sendGame(guesses, toGuess!, 'reset');
 		guesses = [];
 		selectedStop = null;
 		const res = await fetch(`/api/random-station`);
@@ -79,19 +63,8 @@
 	};
 
 	const handleBeforeUnload = () => {
-		if (!hasWon) {
-			fetch('/api/send-game', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					toGuess: toGuess,
-					guesses: guesses,
-					userAction: 'leaveApp'
-				})
-			});
-		}
+		if (!hasWon)
+			sendGame(guesses, toGuess!, 'leave');
 	};
 </script>
 
@@ -117,6 +90,7 @@
 </svelte:head>
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
+<SettingsSelector />
 <div class={'input-container ' + inputContainerClass}
 		 bind:this={inputContainer}
 >

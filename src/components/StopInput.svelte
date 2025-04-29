@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { debounce } from 'lodash';
 	import type { Completion } from '$lib/models/completion.model';
-	import { plainify } from '$lib/utils';
 	import type { FormEventHandler } from 'svelte/elements';
+	import { getCompletions } from '$lib/api';
 
 	interface Props {
 		selected: string | null;
@@ -25,15 +25,9 @@
 			isDropdownVisible = false;
 			return;
 		}
-
 		try {
-			const response = await fetch(`/api/completions?input=${searchTerm}`);
-			if (response.ok) {
-				completions = (await response.json()).completions;
-				isDropdownVisible = completions.length > 0;
-			} else {
-				console.error('Failed to fetch results');
-			}
+			completions = await getCompletions(query);
+			isDropdownVisible = completions.length > 0;
 		} catch (error) {
 			console.error('Error fetching results:', error);
 		}

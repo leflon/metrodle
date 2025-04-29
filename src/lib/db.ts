@@ -7,12 +7,15 @@ import type { Line } from '$lib/models/line.model';
 export const db = new Database('data/idfm.db', { create: true });
 db.exec('PRAGMA journal_mode = WAL');
 
-const randomStationQuery = db.query(
-	"SELECT s.id FROM Stops s JOIN StopLines sl ON sl.stop_id = s.id JOIN Lines l ON l.id = sl.line_id WHERE l.type = 'metro' ORDER BY RANDOM() LIMIT 1"
-);
 
-export function getRandomStop(): { id: string } {
-	return randomStationQuery.get() as { id: string };
+export function getRandomStop(types: string[]): { id: string } {
+	const query = db.prepare('SELECT s.id FROM Stops s JOIN StopLines sl' +
+		' ON' +
+		` sl.stop_id = s.id JOIN Lines l ON l.id = sl.line_id WHERE l.type IN (${types.map(() => '?').join(',')})` +
+		' ORDER BY RANDOM() LIMIT 1'
+	);
+	const res = query.get(...types);
+	return res as { id: string };
 }
 
 const completionsQuery = db.prepare(

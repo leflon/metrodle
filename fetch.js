@@ -130,8 +130,8 @@ interest.map((stop) => {
 		tramTest.test(line.name_line)
 			? 'tram'
 			: line.networkname === 'RER' || line.networkname === 'Transilien'
-				? line.networkname
-				: line.transportmode,
+				? line.networkname.toLowerCase()
+				: line.transportmode.toLowerCase(),
 		line.operatorname.startsWith('RD ') ? 'RATP Cap' : line.operatorname,
 		line.colourweb_hexa,
 		line.textcolourweb_hexa,
