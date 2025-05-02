@@ -19,6 +19,7 @@
 
 	let canReset = $derived(guesses.length > 0);
 	let hasWon = $derived(guesses.find(g => g.isCorrect) !== undefined);
+	let canEditSettings = $derived(guesses.length === 0);
 
 	let inputContainer: HTMLDivElement;
 
@@ -94,7 +95,7 @@
 </svelte:head>
 <div class="beta">BETA</div>
 <img src="/logo.png" alt="Metrodle" />
-<SettingsSelector />
+<SettingsSelector editable={canEditSettings} />
 <div class={'input-container ' + inputContainerClass}
 		 bind:this={inputContainer}
 >

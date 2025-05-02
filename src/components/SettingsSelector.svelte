@@ -1,10 +1,12 @@
 <script>
 	import { storage } from '$lib/storage';
 	import Toggle from './Toggle.svelte';
+
+	const { editable = true } = $props();
 </script>
 
 
-<div class="settings-selector">
+<div class="settings-selector" data-editable={editable}>
 	<div>
 		<span>Metro</span>
 		<div>
@@ -76,6 +78,14 @@
 		align-items: center;
 	}
 
+	[data-editable='false'] {
+		opacity: 0.5;
+		cursor: not-allowed;
+		& * {
+			pointer-events: none;
+		}
+	}
+
 	img {
 		width: 32px;
 		height: 32px;
@@ -86,9 +96,11 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 10px;
+
 		& > span {
 			font-weight: bold;
 		}
+
 		& > div {
 			display: flex;
 			align-items: center;
@@ -104,6 +116,7 @@
 		width: 16px;
 		height: 16px;
 	}
+
 	.toggle-container {
 		height: 32px;
 	}
