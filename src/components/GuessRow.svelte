@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Guess } from '$lib/models/guess.model';
+	import { storage } from '$lib/storage';
 	import { blur } from 'svelte/transition';
 
 	type Props = {
@@ -9,7 +10,8 @@
 
 </script>
 
-<div class="guess-row" transition:blur={{duration: 200}}>
+<div class="guess-row" transition:blur={{duration: 200}}
+		 data-coline={$storage.colineMode}>
 	<div class="guess-row-cell name"
 			 data-correct={guess ? guess.name.correct : 'neutral'}>{guess ? guess.name.value : 'Nom'}</div>
 	<div class="guess-row-cell lines"
@@ -28,7 +30,7 @@
 	<div class="guess-row-cell"
 			 data-correct={guess ? guess.zone.correct : 'neutral'}>{guess ? guess.zone.value : 'Zone'}</div>
 	<div class="guess-row-cell distance" data-correct={guess ?
-	guess.distance.correct : 'neutral'}>
+	guess.distance.correct : 'neutral'} data-displayed={$storage.colineMode}>
 		{#if guess}
 			{#if guess.distance.correct !== 'correct'}
 				<img class="guess-angle"
@@ -57,6 +59,9 @@
 		gap: 30px;
 		min-height: 40px;
 		margin: 10px auto;
+		&[data-coline='false'] {
+			grid-template-columns: repeat(5, minmax(50px, 1fr) );
+		}
 	}
 
 	.guess-row-cell {
@@ -83,6 +88,7 @@
 
 	.guess-row-cell.distance {
 		gap: 5px;
+
 	}
 
 	.guess-row-cell[data-correct='correct'] {
@@ -104,6 +110,10 @@
 		font-size: 16pt;
 		font-weight: bold;
 		overflow: hidden;
+	}
+
+	.distance[data-displayed='false'] {
+		display: none;
 	}
 
 	@media screen and (max-width: 850px) {
