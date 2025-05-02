@@ -24,6 +24,10 @@
 
 	onMount(async () => {
 		toGuess = await getRandomStation($storage.enabledTypes);
+		storage.subscribe(async (val) => {
+			if (guesses.length === 0)
+				toGuess = await getRandomStation(val.enabledTypes);
+		});
 	});
 
 	$effect(() => {
