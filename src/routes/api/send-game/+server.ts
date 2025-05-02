@@ -57,7 +57,8 @@ function formatGuessEntry(name: keyof Guess, entry: GuessEntry<unknown>): string
 type Data = {
 	toGuess: string;
 	guesses: Guess[]; // Stop names
-	userAction: 'reset' | 'finished' | 'leaveApp'
+	userAction: 'reset' | 'finished' | 'leave';
+	colineMode: boolean;
 }
 
 export const POST: RequestHandler = async ({request}) => {
@@ -83,11 +84,12 @@ export const POST: RequestHandler = async ({request}) => {
 	const statusPhrases = {
 		'reset': 'User reset this game',
 		'finished': 'User found the station',
-		'leaveApp': 'User left the game'
+		'leave': 'User left the game'
 	}
-	let body = `**${statusPhrases[data.userAction]}**\n\n`;
-	body += `${guessString}\n`
-	body += `**Correct**: ${stopData.stop.name} (${stopData.lines.map(l => l.name).join(', ')})`
+	let body = `**${statusPhrases[data.userAction]}**\n`;
+	body += `**Coline mode**: ${data.colineMode ? 'Yes' : 'No'}\n\n`;
+	body += `${guessString}\n`;
+	body += `**Correct**: ${stopData.stop.name} (${stopData.lines.map(l => l.name).join(', ')})`;
 	const embed = {
 		title: 'New Game!',
 		description: body,
