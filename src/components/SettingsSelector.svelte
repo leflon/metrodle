@@ -1,70 +1,46 @@
-<script>
+<script lang="ts">
 	import { storage } from '$lib/storage';
 	import Toggle from './Toggle.svelte';
 
 	const { editable = true } = $props();
+
+	const modes = ['metro', 'tram', 'rer', 'transilien'] as (keyof typeof $storage.enabledTypes)[];
+
+
+
 </script>
 
 
 <div class="settings-selector" data-editable={editable}>
-	<div>
-		<span>Metro</span>
+	{#each modes as mode (mode)}
 		<div>
-			<label for="metro">
-				<img src="/transport-logos/metro.webp" alt="metro" />
-			</label>
-			<input type="checkbox"
-						 bind:checked={$storage.enabledTypes.metro}
-						 disabled={$storage.enabledTypes.metro &&
-					 Object.values($storage.enabledTypes).filter(val => val).length === 1}
-						 id="metro" />
+			<span>{mode}</span>
+			<div>
+				<label for={mode}>
+					<img
+						src={`/images/1x/${mode}.webp`}
+						srcset={`/images/1x/${mode}.webp 1x, /images/2x/${mode}.webp 2x, /images/3x/${mode}.webp 3x`}
+						alt={mode}
+						width={32}
+						height={32}
+					/>
+				</label>
+				<input type="checkbox"
+							 bind:checked={$storage.enabledTypes[mode]}
+							 disabled={!editable ||
+							 $storage.enabledTypes[mode] &&
+						 	 Object.values($storage.enabledTypes)
+						 	 .filter(val => val).length === 1}
+							 id={mode}
+							 tabindex={editable ? 0 : -1}
+				/>
+			</div>
 		</div>
-	</div>
-	<div>
-		<span>Tram</span>
-		<div>
-			<label for="tram">
-				<img src="/transport-logos/tram.webp" alt="tram" />
-			</label>
-			<input type="checkbox"
-						 bind:checked={$storage.enabledTypes.tram}
-						 disabled={$storage.enabledTypes.tram &&
-					 Object.values($storage.enabledTypes).filter(val => val).length === 1}
-						 id="tram" />
-		</div>
-	</div>
-	<div>
-		<span>RER</span>
-		<div>
-
-			<label for="rer">
-				<img src="/transport-logos/rer.webp" alt="rer" />
-			</label>
-			<input type="checkbox"
-						 bind:checked={$storage.enabledTypes.rer}
-						 disabled={$storage.enabledTypes.rer &&
-					 Object.values($storage.enabledTypes).filter(val => val).length === 1}
-						 id="rer" />
-		</div>
-	</div>
-	<div>
-		<span>Transilien</span>
-		<div>
-
-			<label for="transilien">
-				<img src="/transport-logos/transilien.webp" alt="transilien" />
-			</label>
-			<input type="checkbox"
-						 bind:checked={$storage.enabledTypes.transilien}
-						 disabled={$storage.enabledTypes.transilien &&
-					 Object.values($storage.enabledTypes).filter(val => val).length === 1}
-						 id="transilien" />
-		</div>
-	</div>
+	{/each}
 	<div class="coline-mode">
-		<span id="coline">Easy mode</span>
+		<span id="coline">Mode Facile</span>
 		<div class="toggle-container">
-			<Toggle bind:value={$storage.colineMode} />
+			<Toggle bind:value={$storage.colineMode} disabled={!editable} />
 		</div>
 	</div>
 </div>
@@ -81,6 +57,7 @@
 	[data-editable='false'] {
 		opacity: 0.5;
 		cursor: not-allowed;
+
 		& * {
 			pointer-events: none;
 		}
@@ -99,6 +76,7 @@
 
 		& > span {
 			font-weight: bold;
+			text-transform: capitalize;
 		}
 
 		& > div {

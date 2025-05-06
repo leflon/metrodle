@@ -24,4 +24,9 @@ export default defineConfig({
 				process.env.VITE_APP_VERSION = pkg.version;
 			},
 		}],
+	server: {
+		headers: {
+			'Cache-Control': 'max-age=2592000', // 30 days
+		}
+	}
 });

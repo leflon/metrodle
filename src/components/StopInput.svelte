@@ -62,7 +62,7 @@
 			{#each completions as completion, index (completion.id)}
 				<div
 					role="button"
-					tabindex={index}
+					tabindex={0}
 					class="dropdown-item"
 					onkeydown={(e) => e.key === 'Enter' && selectResult(completion)}
 					onclick={() => selectResult(completion)}

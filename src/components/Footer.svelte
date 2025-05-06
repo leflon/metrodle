@@ -16,7 +16,7 @@
 
 <style>
 	footer {
-		font: 8pt 'Parisine';
+		font: 12px 'Parisine';
 		text-align: center;
 		flex: 1;
 		display: flex;

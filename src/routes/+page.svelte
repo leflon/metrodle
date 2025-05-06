@@ -94,14 +94,20 @@
 	<title>Metrodle</title>
 </svelte:head>
 <div class="beta">BETA</div>
-<img src="/logo.png" alt="Metrodle" />
+<img src="/images/1x/full-logo.webp"
+		 srcset="/images/1x/full-logo.webp 1x, /images/2x/full-logo.webp 2x, /images/3x/full-logo.webp 3x"
+		 alt="Metrodle"
+		 fetchpriority="high"
+		 width={400}
+		 height={100}
+/>
 <SettingsSelector editable={canEditSettings} />
 <div class={'input-container ' + inputContainerClass}
 		 bind:this={inputContainer}
 >
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon} />
-	<button tabindex={99} onclick={handleGuess}>Valider</button>
+	<button tabindex={0} onclick={handleGuess}>Valider</button>
 	<button onclick={reset} disabled={!canReset}>Recommencer</button>
 </div>
 <div class="guess-container">
@@ -142,7 +148,7 @@
 
 	.beta {
 		position: fixed;
-		background: red;
+		background: #9E0000;
 		color: white;
 		font: 14pt 'Parisine';
 		padding: 5px 40px;

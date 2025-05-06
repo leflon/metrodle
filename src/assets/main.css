@@ -10,12 +10,14 @@
 	src: url('/fonts/Parisine.otf') format('opentype');
 	font-weight: 400;
 	font-style: normal;
+	font-display: swap;
 }
 @font-face {
 	font-family: 'Parisine';
 	src: url('/fonts/Parisine Bold.otf') format('opentype');
 	font-weight: 600;
 	font-style: normal;
+	font-display: swap;
 }
 
 * {
@@ -25,7 +27,7 @@
 body {
 	font-family: 'Parisine', serif;
 	margin: 0;
-	background: url('/tiles.png');
+	background: url('/images/tiles.webp');
 	background-size: 100px;
 	display: flex;
 	flex-direction: column;
@@ -34,7 +36,8 @@ body {
 
 button {
 	background-color: var(--primary-color);
-	color: white;
+	color: black;
+	font-family: 'Parisine', serif;
 	border: none;
 	border-radius: 4px;
 	padding: 10px 15px;
