@@ -66,7 +66,7 @@ const fetchWithProgress = async (url) => {
 
 function removeAccents(str) {
 	return str
-		.replace(/[ -]/g, '')
+		.replace(/[ -']/g, '')
 		.toLowerCase()
 		.normalize('NFD')
 		.replace(/[\u0300-\u036f]/g, '');
