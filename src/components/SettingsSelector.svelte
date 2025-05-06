@@ -52,6 +52,7 @@
 		justify-content: center;
 		gap: 50px;
 		align-items: center;
+		transition: opacity 0.3s ease;
 	}
 
 	[data-editable='false'] {
