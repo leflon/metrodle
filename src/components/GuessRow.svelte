@@ -35,7 +35,8 @@
 			{#if guess.distance.correct !== 'correct'}
 				<img class="guess-angle"
 						 style:transform={`rotate(${ guess.distance.value.angle}deg)`}
-						 src="/arrow.png"
+						 src="/images/1x/arrow.webp"
+						 srcset="/images/1x/arrow.webp 1x, /images/2x/arrow.webp 2x,/images/3x/arrow.webp 3x"
 						 alt="^"
 				/>
 
