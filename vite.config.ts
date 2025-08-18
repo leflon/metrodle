@@ -1,10 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 import pkg from './package.json';
 
 export default defineConfig({
-	plugins: [sveltekit(),
+	plugins: [
+		sveltekit(),
 		{
 			name: 'git-commit-info',
 			config() {
@@ -17,16 +18,21 @@ export default defineConfig({
 					hour: '2-digit',
 					minute: '2-digit',
 					second: '2-digit',
-					weekday: 'long',
+					weekday: 'long'
 				});
 				process.env.VITE_GIT_COMMIT_HASH = hash;
 				process.env.VITE_BUILD_TIME = now;
 				process.env.VITE_APP_VERSION = pkg.version;
-			},
-		}],
+			}
+		}
+	],
 	server: {
 		headers: {
-			'Cache-Control': 'max-age=2592000', // 30 days
+			'Cache-Control': 'max-age=2592000' // 30 days
+		},
+		hmr: {
+			protocol: 'ws',
+			host: 'localhost'
 		}
 	}
 });
