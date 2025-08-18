@@ -1,18 +1,18 @@
-import { Database } from 'bun:sqlite';
+import Database from 'better-sqlite3';
 import { plainify } from './utils';
 import type { Completion } from './models/completion.model';
 import type { Stop } from '$lib/models/stop.model';
 import type { Line } from '$lib/models/line.model';
 
-export const db = new Database('data/idfm.db', { create: true });
+export const db = new Database('data/idfm.db');
 db.exec('PRAGMA journal_mode = WAL');
 
-
 export function getRandomStop(types: string[]): { id: string } {
-	const query = db.prepare('SELECT s.id FROM Stops s JOIN StopLines sl' +
-		' ON' +
-		` sl.stop_id = s.id JOIN Lines l ON l.id = sl.line_id WHERE l.type IN (${types.map(() => '?').join(',')})` +
-		' ORDER BY RANDOM() LIMIT 1'
+	const query = db.prepare(
+		'SELECT s.id FROM Stops s JOIN StopLines sl' +
+			' ON' +
+			` sl.stop_id = s.id JOIN Lines l ON l.id = sl.line_id WHERE l.type IN (${types.map(() => '?').join(',')})` +
+			' ORDER BY RANDOM() LIMIT 1'
 	);
 	const res = query.get(...types);
 	return res as { id: string };
@@ -43,4 +43,3 @@ export function getStopData(id: string): { stop: Stop; lines: Line[] } | null {
 		lines
 	};
 }
-
