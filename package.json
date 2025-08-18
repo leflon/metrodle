@@ -3,8 +3,8 @@
 	"version": "0.7.1",
 	"private": true,
 	"scripts": {
-		"dev": "bunx --bun vite",
-		"build": "bunx --bun vite build",
+		"dev": "vite",
+		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -31,6 +31,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.3.1",
 		"@types/better-sqlite3": "^7.6.13",
 		"add": "^2.0.6",
 		"better-sqlite3": "^12.2.0",
