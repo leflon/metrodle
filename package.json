@@ -31,8 +31,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@types/better-sqlite3": "^7.6.13",
 		"add": "^2.0.6",
-		"lodash": "^4.17.21",
+		"better-sqlite3": "^12.2.0",
 		"sqlite": "^5.1.1",
 		"svelte-confetti": "2.3.1"
 	}

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { debounce } from 'lodash';
 	import type { Completion } from '$lib/models/completion.model';
 	import type { FormEventHandler } from 'svelte/elements';
 	import { getCompletions } from '$lib/api';
+	import { debounce } from '$lib/utils';
 
 	interface Props {
 		selected: string | null;
@@ -15,8 +15,7 @@
 	let isDropdownVisible = $state(false);
 
 	$effect(() => {
-		if (selected === null)
-			query = '';
+		if (selected === null) query = '';
 	});
 
 	const fetchResults = debounce(async (searchTerm) => {
@@ -34,8 +33,7 @@
 	}, 300); // Debounce to avoid overloading API with requests
 
 	const handleInput: FormEventHandler<HTMLInputElement> = () => {
-		if (!disabled)
-			fetchResults(query);
+		if (!disabled) fetchResults(query);
 	};
 
 	function selectResult(result: Completion) {
@@ -56,7 +54,12 @@
 </script>
 
 <div class="stop-input">
-	<input type="text" bind:value={query} oninput={handleInput} placeholder="La Motte-Picquet - Grenelle" />
+	<input
+		type="text"
+		bind:value={query}
+		oninput={handleInput}
+		placeholder="La Motte-Picquet - Grenelle"
+	/>
 	{#if isDropdownVisible}
 		<div class="dropdown">
 			{#each completions as completion, index (completion.id)}
