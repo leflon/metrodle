@@ -97,7 +97,7 @@ async function main() {
 	 */
 	function removeAccents(str) {
 		return str
-			.replace(/[ -']/g, '')
+			.replace(/[ \-']/g, '')
 			.toLowerCase()
 			.normalize('NFD')
 			.replace(/[\u0300-\u036f]/g, '');
@@ -170,7 +170,6 @@ async function main() {
 			);
 			const res = lookup.get(stop.arrname, stop.arrtown);
 			if (res) {
-				console.log('Match found, merging:', stop.arrname);
 				insertStopLine.run(res.id, line.id_line);
 			} else {
 				insertStop.run(
