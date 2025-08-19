@@ -1,7 +1,6 @@
 // This script fetches and formats metro stops data using Node.js.
 import Database from 'better-sqlite3';
 import { createReadStream, writeFileSync, statSync } from 'fs';
-import { PassThrough } from 'stream';
 
 // Function to handle the top-level async logic
 async function main() {
@@ -139,7 +138,7 @@ async function main() {
 	const insertStop = db.prepare('INSERT OR IGNORE INTO Stops VALUES(?, ?, ?, ?, ?, ?)');
 	const insertLine = db.prepare('INSERT OR IGNORE INTO Lines VALUES(?, ?, ?, ?, ?, ?, ?)');
 	const insertStopLine = db.prepare('INSERT OR IGNORE INTO StopLines VALUES(?, ?)');
-	const lookup = db.prepare('SELECT * FROM Stops WHERE name = ? AND town = ?');
+	const lookup = db.prepare('SELECT * FROM Stops WHERE name = ? AND town LIKE ?');
 
 	const insertData = db.transaction((interest) => {
 		interest.map((stop) => {
@@ -168,7 +167,10 @@ async function main() {
 				line.textcolourweb_hexa,
 				line.picto?.url
 			);
-			const res = lookup.get(stop.arrname, stop.arrtown);
+			// This makes sure one stop located on the edge of two districts is correctly
+			// stored as one singular stop, rather than two separate stops. (e.g. Nation, Porte des Lilas, etc.)
+			const town = stop.arrtown.startsWith('Paris') ? 'Paris%' : stop.arrtown;
+			const res = lookup.get(stop.arrname, town);
 			if (res) {
 				insertStopLine.run(res.id, line.id_line);
 			} else {
