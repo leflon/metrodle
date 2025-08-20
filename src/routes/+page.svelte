@@ -18,7 +18,6 @@
 
 	let inputContainerClass = $state('');
 
-	let canReset = $derived(guesses.length > 0);
 	let hasWon = $derived(guesses.find((g) => g.isCorrect) !== undefined);
 	let canEditSettings = $derived(guesses.length === 0);
 
@@ -26,9 +25,6 @@
 
 	onMount(async () => {
 		toGuess = await getRandomStation($storage.enabledTypes);
-		storage.subscribe(async (val) => {
-			if (guesses.length === 0) toGuess = await getRandomStation(val.enabledTypes);
-		});
 	});
 
 	$effect(() => {
@@ -49,11 +45,11 @@
 	}
 
 	const reset = async () => {
+		toGuess = await getRandomStation($storage.enabledTypes);
+		selectedStop = null;
 		if (guesses.length === 0) return;
 		if (!hasWon) sendGame(guesses, toGuess!, 'reset');
 		guesses = [];
-		selectedStop = null;
-		toGuess = await getRandomStation($storage.enabledTypes);
 	};
 
 	const handleScroll = () => {
@@ -104,7 +100,7 @@
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon} />
 	<button tabindex={0} onclick={handleGuess}>Valider</button>
-	<button onclick={reset} disabled={!canReset}>Recommencer</button>
+	<button onclick={reset}>Recommencer</button>
 </div>
 <div class="guess-container">
 	<GuessRow />

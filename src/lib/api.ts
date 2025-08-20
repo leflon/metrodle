@@ -1,6 +1,7 @@
 import type { Guess } from '$lib/models/guess.model';
 import type { Completion } from '$lib/models/completion.model';
 import { storage } from '$lib/storage';
+import { get } from 'svelte/store';
 
 export async function getRandomStation(enabledTypes: Record<string, boolean>): Promise<string> {
 	const query = new URLSearchParams();
@@ -35,19 +36,18 @@ export async function sendGame(
 	correct: string,
 	action: 'finished' | 'reset' | 'leave'
 ): Promise<void> {
-	storage.subscribe(async (val) => {
-		await fetch('/api/send-game', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				guesses,
-				colineMode: val.colineMode,
-				showMap: val.showMap,
-				toGuess: correct,
-				userAction: action
-			})
-		});
+	const snapshot = get(storage);
+	await fetch('/api/send-game', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			guesses,
+			colineMode: snapshot.colineMode,
+			showMap: snapshot.showMap,
+			toGuess: correct,
+			userAction: action
+		})
 	});
 }
