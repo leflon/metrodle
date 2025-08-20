@@ -16,10 +16,14 @@
 
 	let showColors = $state($storage.colineMode);
 
-	const drawMap = () => {
-		console.log('draw');
+	const drawMap = async () => {
 		if (!geo) return;
 		map.setView([geo.center[1], geo.center[0]], 16);
+		// Removes the previously drawned elements from the map.
+		map.eachLayer((layer) => {
+			if (layer.getAttribution!() === 'Carto') return; // Avoids removing the map tiles layer.
+			layer.remove();
+		});
 		L.geoJSON(geo.features, {
 			style: (feature) => {
 				return {
@@ -66,7 +70,9 @@
 			keyboard: false,
 			touchZoom: false
 		});
-		L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
+		L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+			attribution: 'Carto'
+		}).addTo(map);
 	});
 </script>
 
