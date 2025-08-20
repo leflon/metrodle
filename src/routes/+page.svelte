@@ -45,10 +45,11 @@
 	}
 
 	const reset = async () => {
+		const oldToGuess = toGuess;
 		toGuess = await getRandomStation($storage.enabledTypes);
 		selectedStop = null;
 		if (guesses.length === 0) return;
-		if (!hasWon) sendGame(guesses, toGuess!, 'reset');
+		if (!hasWon) sendGame(guesses, oldToGuess!, 'reset');
 		guesses = [];
 	};
 
