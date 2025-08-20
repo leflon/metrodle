@@ -10,7 +10,7 @@
 <footer>
 	<p>Made in 🇫🇷 by <a href="https://leflon.fr">Paul Leflon</a></p>
 	<hr />
-	<p>Map provided by <a href="carto.com">Carto</a></p>
+	<p>Map provided by <a href="https://carto.com">Carto</a></p>
 	<p>Built on {buildTime}</p>
 	<p>Version: {version} | Commit: <a href={commitHref}>{commit}</a></p>
 </footer>

@@ -39,6 +39,12 @@
 			<Toggle bind:value={$storage.colineMode} disabled={!editable} />
 		</div>
 	</div>
+	<div class="show-map">
+		<span>Afficher carte</span>
+		<div class="toggle-container">
+			<Toggle bind:value={$storage.showMap} disabled={!editable} />
+		</div>
+	</div>
 </div>
 
 <style>

@@ -56,5 +56,6 @@
 		height: 300px;
 		overflow: hidden;
 		margin: 10px auto;
+		border-radius: 10px;
 	}
 </style>

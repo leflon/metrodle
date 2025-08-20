@@ -1,16 +1,16 @@
 <script lang="ts">
-	import '../assets/main.css';
-	import type { Guess } from '$lib/models/guess.model';
-	import { fade } from 'svelte/transition';
-	import StopInput from '../components/StopInput.svelte';
-	import GuessRow from '../components/GuessRow.svelte';
-	import { Confetti } from 'svelte-confetti';
-	import Footer from '../components/Footer.svelte';
-	import { onMount } from 'svelte';
 	import { getRandomStation, sendGame, sendGuess } from '$lib/api';
+	import type { Guess } from '$lib/models/guess.model';
 	import { storage } from '$lib/storage.js';
-	import SettingsSelector from '../components/SettingsSelector.svelte';
+	import { onMount } from 'svelte';
+	import { Confetti } from 'svelte-confetti';
+	import { fade } from 'svelte/transition';
+	import '../assets/main.css';
+	import Footer from '../components/Footer.svelte';
+	import GuessRow from '../components/GuessRow.svelte';
 	import MiniMap from '../components/MiniMap.svelte';
+	import SettingsSelector from '../components/SettingsSelector.svelte';
+	import StopInput from '../components/StopInput.svelte';
 
 	let toGuess: string | null = $state(null);
 	let selectedStop = $state(null);
@@ -97,7 +97,7 @@
 	height={100}
 />
 <SettingsSelector editable={canEditSettings} />
-{#if toGuess}
+{#if toGuess && $storage.showMap}
 	<MiniMap stop={toGuess} />
 {/if}
 <div class={'input-container ' + inputContainerClass} bind:this={inputContainer}>

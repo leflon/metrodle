@@ -44,6 +44,7 @@ export async function sendGame(
 			body: JSON.stringify({
 				guesses,
 				colineMode: val.colineMode,
+				showMap: val.showMap,
 				toGuess: correct,
 				userAction: action
 			})
