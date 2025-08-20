@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import '../assets/main.css';
 	import type { Guess } from '$lib/models/guess.model';
 	import { fade } from 'svelte/transition';
@@ -10,6 +10,7 @@
 	import { getRandomStation, sendGame, sendGuess } from '$lib/api';
 	import { storage } from '$lib/storage.js';
 	import SettingsSelector from '../components/SettingsSelector.svelte';
+	import MiniMap from '../components/MiniMap.svelte';
 
 	let toGuess: string | null = $state(null);
 	let selectedStop = $state(null);
@@ -18,7 +19,7 @@
 	let inputContainerClass = $state('');
 
 	let canReset = $derived(guesses.length > 0);
-	let hasWon = $derived(guesses.find(g => g.isCorrect) !== undefined);
+	let hasWon = $derived(guesses.find((g) => g.isCorrect) !== undefined);
 	let canEditSettings = $derived(guesses.length === 0);
 
 	let inputContainer: HTMLDivElement;
@@ -26,14 +27,12 @@
 	onMount(async () => {
 		toGuess = await getRandomStation($storage.enabledTypes);
 		storage.subscribe(async (val) => {
-			if (guesses.length === 0)
-				toGuess = await getRandomStation(val.enabledTypes);
+			if (guesses.length === 0) toGuess = await getRandomStation(val.enabledTypes);
 		});
 	});
 
 	$effect(() => {
-		if (hasWon === true)
-			sendGame(guesses, toGuess!, 'finished');
+		if (hasWon === true) sendGame(guesses, toGuess!, 'finished');
 	});
 
 	async function handleGuess() {
@@ -49,16 +48,12 @@
 		}
 	}
 
-
 	const reset = async () => {
-		if (guesses.length === 0)
-			return;
-		if (!hasWon)
-			sendGame(guesses, toGuess!, 'reset');
+		if (guesses.length === 0) return;
+		if (!hasWon) sendGame(guesses, toGuess!, 'reset');
 		guesses = [];
 		selectedStop = null;
-		const res = await fetch(`/api/random-station`);
-		toGuess = (await res.json()).id;
+		toGuess = await getRandomStation($storage.enabledTypes);
 	};
 
 	const handleScroll = () => {
@@ -68,14 +63,13 @@
 	};
 
 	const handleBeforeUnload = () => {
-		if (!hasWon)
-			sendGame(guesses, toGuess!, 'leave');
+		if (!hasWon) sendGame(guesses, toGuess!, 'leave');
 	};
 </script>
 
-<svelte:document onscroll={handleScroll}></svelte:document>
+<svelte:document onscroll={handleScroll} />
 
-<svelte:window onbeforeunload={handleBeforeUnload}></svelte:window>
+<svelte:window onbeforeunload={handleBeforeUnload} />
 <svelte:head>
 	<link
 		rel="preload"
@@ -94,17 +88,19 @@
 	<title>Metrodle</title>
 </svelte:head>
 <div class="beta">BETA</div>
-<img src="/images/1x/full-logo.webp"
-		 srcset="/images/1x/full-logo.webp 1x, /images/2x/full-logo.webp 2x, /images/3x/full-logo.webp 3x"
-		 alt="Metrodle"
-		 fetchpriority="high"
-		 width={400}
-		 height={100}
+<img
+	src="/images/1x/full-logo.webp"
+	srcset="/images/1x/full-logo.webp 1x, /images/2x/full-logo.webp 2x, /images/3x/full-logo.webp 3x"
+	alt="Metrodle"
+	fetchpriority="high"
+	width={400}
+	height={100}
 />
 <SettingsSelector editable={canEditSettings} />
-<div class={'input-container ' + inputContainerClass}
-		 bind:this={inputContainer}
->
+{#if toGuess}
+	<MiniMap stop={toGuess} />
+{/if}
+<div class={'input-container ' + inputContainerClass} bind:this={inputContainer}>
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon} />
 	<button tabindex={0} onclick={handleGuess}>Valider</button>
@@ -113,10 +109,10 @@
 <div class="guess-container">
 	<GuessRow />
 	{#each guesses as guess, index (index)}
-		<GuessRow guess={guess} />
+		<GuessRow {guess} />
 	{/each}
-	{#if guesses.length === 0 }
-		<div out:fade={{duration: 200}} in:fade={{delay: 500}} class="start-hint">
+	{#if guesses.length === 0}
+		<div out:fade={{ duration: 200 }} in:fade={{ delay: 500 }} class="start-hint">
 			Essayez de deviner la station !
 		</div>
 	{/if}
@@ -124,19 +120,38 @@
 {#if hasWon}
 	<div class="confetti-container">
 		<Confetti
-			colorArray={["#FFCE00", "#0064B0", "#9F9825", "#98D4E2", "#C04191", "#F28E42", "#83C491", "#F3A4BA", "#CEADD2", "#D5C900", "#E3B32A", "#8D5E2A", "#00814F", "#662483", "#B90845", "#00A88F"]}
-			x={[-1.5,1.5]}
-			y={[0,3]}
+			colorArray={[
+				'#FFCE00',
+				'#0064B0',
+				'#9F9825',
+				'#98D4E2',
+				'#C04191',
+				'#F28E42',
+				'#83C491',
+				'#F3A4BA',
+				'#CEADD2',
+				'#D5C900',
+				'#E3B32A',
+				'#8D5E2A',
+				'#00814F',
+				'#662483',
+				'#B90845',
+				'#00A88F'
+			]}
+			x={[-1.5, 1.5]}
+			y={[0, 3]}
 			fallDistance="100px"
 			amount={400}
 			cone={true}
-			size={10} />
+			size={10}
+		/>
 	</div>
-	<div class="won" in:fade={{delay: 200}} out:fade={{duration: 0}}>
+	<div class="won" in:fade={{ delay: 200 }} out:fade={{ duration: 0 }}>
 		<button onclick={reset}>Rejouer</button>
 	</div>
 {/if}
 <Footer></Footer>
+
 <style>
 	img {
 		display: block;
@@ -148,7 +163,7 @@
 
 	.beta {
 		position: fixed;
-		background: #9E0000;
+		background: #9e0000;
 		color: white;
 		font: 14pt 'Parisine';
 		padding: 5px 40px;
@@ -195,7 +210,7 @@
 		height: 120%;
 		inset: 0;
 		backdrop-filter: blur(5px);
-		mask-image: linear-gradient(to top, transparent 0%, #000F 40%);
+		mask-image: linear-gradient(to top, transparent 0%, #000f 40%);
 		z-index: 0;
 		opacity: 0;
 		transition: opacity 0.3s;

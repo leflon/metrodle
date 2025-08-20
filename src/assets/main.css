@@ -1,9 +1,7 @@
 :root {
-	--primary-color: #02C4B4;
+	--primary-color: #02c4b4;
 	--secondary-color: #02a396;
 }
-
-
 
 @font-face {
 	font-family: 'Parisine';
@@ -58,4 +56,9 @@ button[disabled] {
 	background-color: #ccc !important;
 	cursor: not-allowed;
 	transform: none !important;
+}
+
+/* Attribution is given in the footer */
+.leaflet-control-attribution {
+	display: none;
 }

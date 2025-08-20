@@ -23,6 +23,13 @@ export async function getCompletions(input: string): Promise<Completion[]> {
 	return (await result.json()).completions;
 }
 
+export async function getMinimapFeatures(
+	stop: string
+): Promise<{ center: [number, number]; features: any; isConnecting: boolean }> {
+	const result = await fetch(`/api/minimap?stop=${stop}`);
+	return await result.json();
+}
+
 export async function sendGame(
 	guesses: Guess[],
 	correct: string,

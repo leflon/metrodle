@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { createReadStream, statSync, writeFileSync } from 'fs';
 import { plainify } from './src/lib/utils.ts';
+import { writeFile } from 'fs/promises';
 
 const db = new Database('data/idfm.db');
 db.exec('PRAGMA journal_mode = WAL');
@@ -12,6 +13,8 @@ const LINES_URL =
 	'https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/referentiel-des-lignes/exports/json';
 const STOP_DETAILS_URL =
 	'https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/arrets/exports/json';
+const MAP_URL =
+	'https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/traces-du-reseau-ferre-idf/exports/geojson';
 
 /* CLI flags */
 const LOAD_LOCAL = process.argv.includes('--local'); // Load from local save rather than distant dataset
@@ -37,7 +40,7 @@ db.exec('CREATE INDEX IF NOT EXISTS idx_stop_modes ON StopModes(mode)'); // For 
 console.log('== Fetching data ==');
 type Datapoint = Record<string, string | Object | number>;
 type Dataset = Datapoint[];
-let stops: Dataset, lines: Dataset, stopDetails: Dataset;
+let stops: Dataset, lines: Dataset, stopDetails: Dataset, map: Dataset;
 
 /**
  * Fetches data from a URL or local file with a progress indicator.
@@ -94,14 +97,21 @@ const fetchWithProgress = async (url: string): Promise<Dataset> => {
 	return JSON.parse(result);
 };
 
+console.log('Fetching stops...');
 stops = await fetchWithProgress(LOAD_LOCAL ? 'data/stops.json' : STOPS_URL);
+console.log('Fetching lines...');
 lines = await fetchWithProgress(LOAD_LOCAL ? 'data/lines.json' : LINES_URL);
+console.log('Fetching stop details...');
 stopDetails = await fetchWithProgress(LOAD_LOCAL ? 'data/stop_details.json' : STOP_DETAILS_URL);
 
 if (!LOAD_LOCAL) {
 	writeFileSync('data/stops.json', JSON.stringify(stops));
 	writeFileSync('data/lines.json', JSON.stringify(lines));
 	writeFileSync('data/stop_details.json', JSON.stringify(stopDetails));
+	// This dataset is not to be stored in database, we only need the JSON file.
+	console.log('Fetching map...');
+	map = await fetchWithProgress(MAP_URL);
+	writeFileSync('data/map.json', JSON.stringify(map));
 }
 
 console.log('== Formatting and saving... (Might take some time)');
