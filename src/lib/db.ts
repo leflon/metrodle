@@ -21,12 +21,12 @@ export function getRandomStop(modes: string[]): { id: string } {
 }
 
 const completionsQuery = db.prepare(
-	'SELECT id, name, plain_name FROM Stops WHERE plain_name LIKE ? OR plain_name LIKE ? LIMIT 10'
+	'SELECT id, name, plain_name FROM Stops WHERE plain_name LIKE ? ORDER BY LENGTH(name) LIMIT 10'
 );
 
 export function getCompletions(input: string): Completion[] {
 	input = plainify(input);
-	return completionsQuery.all(`${input}%`, `%${input}%`) as Completion[];
+	return completionsQuery.all(`%${input}%`) as Completion[];
 }
 
 const fullStopQuery = db.prepare('SELECT * FROM Stops WHERE id = ?');
