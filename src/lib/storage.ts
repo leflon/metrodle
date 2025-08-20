@@ -6,7 +6,7 @@ type MetrodleStorage = {
 		metro: boolean;
 		tram: boolean;
 		rer: boolean;
-		transilien: boolean;
+		train: boolean;
 	};
 	/* Easy mode: including the distance/direction in the hints */
 	colineMode: boolean;
@@ -33,9 +33,9 @@ export const storage = writable<MetrodleStorage>({
 });
 
 storage.subscribe((val) => {
-	if(Object.values(val.enabledTypes).filter(v => v).length === 0)
-		val.enabledTypes = {metro: true, tram: false, rer: false, transilien: false};
-	Object.entries(val).forEach(([k,v]) => {
+	if (Object.values(val.enabledTypes).filter((v) => v).length === 0)
+		val.enabledTypes = { metro: true, tram: false, rer: false, transilien: false };
+	Object.entries(val).forEach(([k, v]) => {
 		typeof window !== 'undefined' && localStorage.setItem(`metrodle:${k}`, JSON.stringify(v));
 	});
 });

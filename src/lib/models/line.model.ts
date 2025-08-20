@@ -1,9 +1,7 @@
 export type Line = {
-	id: string;
 	name: string;
-	type: string;
-	operator: string;
+	mode: string;
+	picto: string;
 	color: string;
 	textColor: string;
-	picto: string;
-}
+};

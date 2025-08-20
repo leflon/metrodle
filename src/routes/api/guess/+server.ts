@@ -2,7 +2,6 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { getStopData } from '$lib/db';
 import type { GuessEntry } from '$lib/models/guess.model';
 
-
 function distanceAndAngle(geo1: [number, number], geo2: [number, number]): [number, number] {
 	const [lon1, lat1] = geo1;
 	const [lon2, lat2] = geo2;
@@ -32,7 +31,6 @@ function distanceAndAngle(geo1: [number, number], geo2: [number, number]): [numb
 	return [distance, bearing];
 }
 
-
 export const GET: RequestHandler = async ({ url }) => {
 	const guess = url.searchParams.get('guess');
 	const correct = url.searchParams.get('correct');
@@ -60,8 +58,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	 * If the guessed stop has some lines that are in the correct stop, it's partial
 	 * Else, it's incorrect
 	 */
-	const guessedLines = guessedStop.lines.map((line) => line.id);
-	const correctLines = correctStop.lines.map((line) => line.id);
+	const guessedLines = guessedStop.lines.map((line) => line.name);
+	const correctLines = correctStop.lines.map((line) => line.name);
 
 	const lines: GuessEntry<{ name: string; picto: string }[]> = {
 		value: guessedStop.lines.map((line) => ({
@@ -87,8 +85,8 @@ export const GET: RequestHandler = async ({ url }) => {
 		correct: guessedStop.stop.fare_zone === correctStop.stop.fare_zone ? 'correct' : 'incorrect'
 	};
 
-	const guessGeo = guessedStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
-	const correctGeo = correctStop.stop.geo.split(',').map(p => parseFloat(p)) as [number, number];
+	const guessGeo = guessedStop.stop.geo.split(',').map((p) => parseFloat(p)) as [number, number];
+	const correctGeo = correctStop.stop.geo.split(',').map((p) => parseFloat(p)) as [number, number];
 	const [d, angle] = distanceAndAngle(guessGeo, correctGeo);
 	return json({
 		name,
@@ -97,7 +95,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		zone,
 		distance: {
 			value: {
-				distance:d,
+				distance: d,
 				angle
 			},
 			correct: guess === correct ? 'correct' : 'partial'

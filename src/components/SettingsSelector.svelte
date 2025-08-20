@@ -4,12 +4,8 @@
 
 	const { editable = true } = $props();
 
-	const modes = ['metro', 'tram', 'rer', 'transilien'] as (keyof typeof $storage.enabledTypes)[];
-
-
-
+	const modes = ['metro', 'tram', 'rer', 'train'] as (keyof typeof $storage.enabledTypes)[];
 </script>
-
 
 <div class="settings-selector" data-editable={editable}>
 	{#each modes as mode (mode)}
@@ -25,14 +21,14 @@
 						height={32}
 					/>
 				</label>
-				<input type="checkbox"
-							 bind:checked={$storage.enabledTypes[mode]}
-							 disabled={!editable ||
-							 $storage.enabledTypes[mode] &&
-						 	 Object.values($storage.enabledTypes)
-						 	 .filter(val => val).length === 1}
-							 id={mode}
-							 tabindex={editable ? 0 : -1}
+				<input
+					type="checkbox"
+					bind:checked={$storage.enabledTypes[mode]}
+					disabled={!editable ||
+						($storage.enabledTypes[mode] &&
+							Object.values($storage.enabledTypes).filter((val) => val).length === 1)}
+					id={mode}
+					tabindex={editable ? 0 : -1}
 				/>
 			</div>
 		</div>
@@ -87,7 +83,8 @@
 		}
 	}
 
-	label, input {
+	label,
+	input {
 		cursor: pointer;
 	}
 
