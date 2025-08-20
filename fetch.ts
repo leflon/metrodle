@@ -132,6 +132,8 @@ function parseLines(linesString: string): string[] {
 		let line = parsed[2];
 		if (parsed[1] === 'TRAM') line = `T${line}`;
 		if (line.includes('bis')) line = line.replace('bis', 'B');
+		if (line.includes('MONTMARTRE')) line = 'FUNICULAIRE';
+		line.replaceAll(' ', '');
 		result.push(line);
 	}
 	if (result.length === 0) result = [linesString];
@@ -179,7 +181,7 @@ const insertData = db.transaction((stops) => {
 			let mode = line.networkname ? (line.networkname as string) : (line.transportmode as string);
 			mode = parseMode(mode);
 			insertLine.run(
-				line.name_line,
+				(line.name_line as string).replaceAll(' ', ''),
 				mode,
 				(line.picto as any)?.url,
 				line.colourweb_hexa,
