@@ -59,6 +59,7 @@
 		bind:value={query}
 		oninput={handleInput}
 		placeholder="La Motte-Picquet - Grenelle"
+		{disabled}
 	/>
 	{#if isDropdownVisible}
 		<div class="dropdown">
