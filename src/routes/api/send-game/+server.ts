@@ -86,7 +86,8 @@ export const POST: RequestHandler = async ({ request }) => {
 	const statusPhrases = {
 		reset: 'User reset this game',
 		finished: 'User found the station',
-		leave: 'User left the game'
+		leave: 'User left the game',
+		forfeit: 'User forfeited the game'
 	};
 	let body = `**${statusPhrases[data.userAction]}**\n`;
 	body += `**Coline mode**: ${data.colineMode ? 'Yes' : 'No'}\n`;

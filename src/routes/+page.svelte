@@ -15,6 +15,9 @@
 	let toGuess: string | null = $state(null);
 	let selectedStop = $state(null);
 	let guesses: Guess[] = $state([]);
+	let hasForfeited = $state(false);
+	// Only fetched when user forfeits
+	let correctGuess: Guess | null = $state(null);
 
 	let inputContainerClass = $state('');
 
@@ -46,11 +49,21 @@
 
 	const reset = async () => {
 		const oldToGuess = toGuess;
+		// No matter what, we reset the station to guess
 		toGuess = await getRandomStation($storage.enabledTypes);
+		hasForfeited = false;
+		correctGuess = null;
 		selectedStop = null;
+		// Send game and reset guesses only if the game was played
 		if (guesses.length === 0) return;
 		if (!hasWon) sendGame(guesses, oldToGuess!, 'reset');
 		guesses = [];
+	};
+
+	const forfeit = async () => {
+		hasForfeited = true;
+		correctGuess = await sendGuess(toGuess!, toGuess!);
+		sendGame(guesses, toGuess!, 'forfeit');
 	};
 
 	const handleScroll = () => {
@@ -99,7 +112,7 @@
 {/if}
 <div class={'input-container ' + inputContainerClass} bind:this={inputContainer}>
 	<div class="input-container-blur"></div>
-	<StopInput bind:selected={selectedStop} disabled={hasWon} />
+	<StopInput bind:selected={selectedStop} disabled={hasWon || hasForfeited} />
 	<button tabindex={0} onclick={handleGuess}>Valider</button>
 	<button onclick={reset}>Recommencer</button>
 </div>
@@ -114,6 +127,15 @@
 		</div>
 	{/if}
 </div>
+{#if !hasWon && !hasForfeited}
+	<div class="button-container">
+		<button onclick={forfeit}>Réveler la réponse</button>
+	</div>
+{/if}
+{#if hasForfeited && correctGuess}
+	<div class="separator"></div>
+	<GuessRow guess={correctGuess} />
+{/if}
 {#if hasWon}
 	<div class="confetti-container">
 		<Confetti
@@ -143,7 +165,7 @@
 			size={10}
 		/>
 	</div>
-	<div class="won" in:fade={{ delay: 200 }} out:fade={{ duration: 0 }}>
+	<div class="button-container" in:fade={{ delay: 200 }} out:fade={{ duration: 0 }}>
 		<button onclick={reset}>Rejouer</button>
 	</div>
 {/if}
@@ -190,7 +212,6 @@
 		align-items: center;
 		flex-wrap: wrap;
 		gap: 20px;
-		margin-top: 20px;
 		z-index: 90;
 		padding: 20px 5px;
 	}
@@ -217,9 +238,17 @@
 		opacity: 1;
 	}
 
-	.won {
+	.button-container {
 		padding: 10px;
 		display: flex;
 		justify-content: center;
+	}
+
+	.separator {
+		width: 100px;
+		max-width: 50%;
+		height: 1px;
+		background: #aaa;
+		margin: 5px auto;
 	}
 </style>

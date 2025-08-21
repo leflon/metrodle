@@ -34,7 +34,7 @@ export async function getMinimapFeatures(
 export async function sendGame(
 	guesses: Guess[],
 	correct: string,
-	action: 'finished' | 'reset' | 'leave'
+	action: 'finished' | 'reset' | 'leave' | 'forfeit'
 ): Promise<void> {
 	const snapshot = get(storage);
 	await fetch('/api/send-game', {
