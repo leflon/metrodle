@@ -99,6 +99,7 @@
 </svelte:head>
 <div class="beta">BETA</div>
 <img
+	class="main-logo"
 	src="/images/1x/full-logo.webp"
 	srcset="/images/1x/full-logo.webp 1x, /images/2x/full-logo.webp 2x, /images/3x/full-logo.webp 3x"
 	alt="Metrodle"

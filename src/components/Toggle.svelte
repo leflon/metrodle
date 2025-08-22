@@ -5,21 +5,22 @@
 		if (disabled) return;
 		value = !value;
 	};
-
 </script>
+
 <button
 	class="toggle-container"
 	data-value={value}
 	onclick={toggleValue}
 	tabindex={disabled ? -1 : 0}
-	disabled={disabled}
+	{disabled}
 >
 	<div class="toggle-bar"></div>
 	<div class="toggle-circle">
-		<img src="/images/1x/check.webp"
-				 srcset="/images/1x/check.webp 1x, /images/2x/check.webp 2x, /images/3x/check.webp 3x"
-				 alt="Check"
-				 width={16}
+		<img
+			src="/images/1x/check.webp"
+			srcset="/images/1x/check.webp 1x, /images/2x/check.webp 2x, /images/3x/check.webp 3x"
+			alt="Check"
+			width={16}
 		/>
 		<img
 			src="/images/1x/close.webp"
@@ -31,6 +32,9 @@
 </button>
 
 <style>
+	button {
+		all: unset;
+	}
 	.toggle-container {
 		position: relative;
 		padding: 0;
@@ -63,7 +67,9 @@
 		border-radius: 50%;
 		background: white;
 		left: 0;
-		transition: left 0.3s ease, transform 0.3s ease;
+		transition:
+			left 0.3s ease,
+			transform 0.3s ease;
 	}
 
 	.toggle-circle img {
@@ -72,20 +78,20 @@
 		transition: opacity 0.3s ease;
 	}
 
-	[data-value="true"] .toggle-circle img:last-child {
+	[data-value='true'] .toggle-circle img:last-child {
 		opacity: 0;
 	}
 
-	[data-value="false"] .toggle-circle img:first-child {
+	[data-value='false'] .toggle-circle img:first-child {
 		opacity: 0;
 	}
 
-	[data-value="true"] .toggle-circle {
+	[data-value='true'] .toggle-circle {
 		left: 100%;
 		transform: translate(-100%, -50%);
 	}
 
-	[data-value="false"] .toggle-bar {
+	[data-value='false'] .toggle-bar {
 		background-color: #ff2521;
 	}
 
