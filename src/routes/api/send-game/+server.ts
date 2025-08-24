@@ -57,7 +57,7 @@ type Data = {
 	toGuess: string;
 	guesses: Guess[]; // Stop names
 	userAction: 'reset' | 'finished' | 'leave';
-	colineMode: boolean;
+	hardMode: boolean;
 	showMap: boolean;
 };
 
@@ -90,7 +90,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		forfeit: 'User forfeited the game'
 	};
 	let body = `**${statusPhrases[data.userAction]}**\n`;
-	body += `**Coline mode**: ${data.colineMode ? 'Yes' : 'No'}\n`;
+	body += `**Hard mode**: ${data.hardMode ? 'Yes' : 'No'}\n`;
 	body += `**Show map**: ${data.showMap ? 'Yes' : 'No'}\n\n`;
 	body += `${guessString}\n`;
 	body += `**Correct**: ${stopData.stop.name} (${stopData.lines.map((l) => l.name).join(', ')})`;

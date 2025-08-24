@@ -8,18 +8,18 @@ type MetrodleStorage = {
 		rer: boolean;
 		train: boolean;
 	};
-	/* Easy mode: including the distance/direction in the hints */
-	colineMode: boolean;
+	/* Hard mode: removign the distance/direction from hints and removing colors from map */
+	hardMode: boolean;
 	showMap: boolean;
 };
 
 let storedEnabled;
-let storedColine;
+let storedHard;
 let storedShowMap;
 
 try {
 	storedEnabled = JSON.parse(localStorage.getItem('metrodle:enabledTypes') || '');
-	storedColine = JSON.parse(localStorage.getItem('metrodle:colineMode') || '');
+	storedHard = JSON.parse(localStorage.getItem('metrodle:hardMode') || '');
 	storedShowMap = JSON.parse(localStorage.getItem('metrodle:showMap') || '');
 } catch {
 	storedEnabled ??= {
@@ -28,12 +28,12 @@ try {
 		rer: false,
 		transilien: false
 	};
-	storedColine ??= false;
+	storedHard ??= false;
 	storedShowMap ??= true;
 }
 export const storage = writable<MetrodleStorage>({
 	enabledTypes: storedEnabled,
-	colineMode: storedColine,
+	hardMode: storedHard,
 	showMap: storedShowMap
 });
 

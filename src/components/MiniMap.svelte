@@ -15,7 +15,7 @@
 	};
 	let { stop, unzoom }: Props = $props();
 
-	let showColors = $state($storage.colineMode);
+	let showColors = $derived(!$storage.hardMode);
 
 	$effect(() => {
 		// Zooming out happens only when revealing the answer, and happens here.
@@ -26,7 +26,7 @@
 		map.setZoom(12);
 	});
 
-	const drawMap = async () => {
+	const drawMap = async (colors: boolean) => {
 		if (!geo) return;
 		map.setView([geo.center[1], geo.center[0]], 16);
 		// Removes the previously drawned elements from the map.
@@ -42,7 +42,7 @@
 					// lines, hiding their color.
 					opacity: mode === 'TER' ? 0 : 1,
 					weight: mode === 'METRO' || mode === 'TRAMWAY' ? 5 : 7, // thicker lines for heavy rail lines
-					color: showColors ? '#' + feature?.properties.colourweb_hexa : 'black'
+					color: colors ? '#' + feature?.properties.colourweb_hexa : 'black'
 				};
 			}
 		}).addTo(map);
@@ -55,19 +55,15 @@
 		}).addTo(map);
 	};
 
-	storage.subscribe((value) => {
-		if (value.colineMode !== showColors) {
-			// Trigger redraw only when this value changes.
-			showColors = value.colineMode;
-			drawMap();
-		}
+	$effect(() => {
+		drawMap(showColors);
 	});
 
 	$effect(() => {
 		getMinimapFeatures(stop).then((result) => {
 			geo = result;
 			if (!geo) return;
-			drawMap();
+			drawMap(showColors);
 		});
 	});
 

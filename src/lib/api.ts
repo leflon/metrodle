@@ -44,7 +44,7 @@ export async function sendGame(
 		},
 		body: JSON.stringify({
 			guesses,
-			colineMode: snapshot.colineMode,
+			hardMode: snapshot.hardMode,
 			showMap: snapshot.showMap,
 			toGuess: correct,
 			userAction: action

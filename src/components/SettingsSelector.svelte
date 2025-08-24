@@ -33,16 +33,16 @@
 			</div>
 		</div>
 	{/each}
-	<div class="coline-mode">
-		<span id="coline">Mode Facile</span>
-		<div class="toggle-container">
-			<Toggle bind:value={$storage.colineMode} disabled={!editable} />
-		</div>
-	</div>
 	<div class="show-map">
 		<span>Afficher carte</span>
 		<div class="toggle-container">
 			<Toggle bind:value={$storage.showMap} disabled={!editable} />
+		</div>
+	</div>
+	<div class="hard-mode">
+		<span>Mode Difficile</span>
+		<div class="toggle-container">
+			<Toggle bind:value={$storage.hardMode} disabled={!editable} />
 		</div>
 	</div>
 </div>
