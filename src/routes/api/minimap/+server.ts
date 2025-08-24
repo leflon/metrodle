@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const split = stopData.stop.geo.split(',');
 	const geoPoint = [parseFloat(split[0]), parseFloat(split[1])];
 	const center = turf.point(geoPoint);
-	const radius = 1; //km
+	const radius = 10; //km. Needs a big radius to allow for unzoom when game ends.
 	const circle = turf.circle(center, radius, { steps: 64, units: 'kilometers' });
 	// const filteredFeatures = turf.pointsWithinPolygon(FEATURES.features as any, circle);
 	const filteredFeatures = FEATURES.features.filter((feature) => {

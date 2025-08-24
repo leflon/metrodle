@@ -23,6 +23,7 @@
 
 	let hasWon = $derived(guesses.find((g) => g.isCorrect) !== undefined);
 	let canEditSettings = $derived(guesses.length === 0);
+	let unzoomMap = $derived(hasWon || hasForfeited);
 
 	let inputContainer: HTMLDivElement;
 
@@ -109,7 +110,7 @@
 />
 <SettingsSelector editable={canEditSettings} />
 {#if toGuess && $storage.showMap}
-	<MiniMap stop={toGuess} />
+	<MiniMap stop={toGuess} unzoom={unzoomMap} />
 {/if}
 <div class={'input-container ' + inputContainerClass} bind:this={inputContainer}>
 	<div class="input-container-blur"></div>

@@ -11,10 +11,20 @@
 
 	type Props = {
 		stop: string;
+		unzoom: boolean;
 	};
-	let { stop }: Props = $props();
+	let { stop, unzoom }: Props = $props();
 
 	let showColors = $state($storage.colineMode);
+
+	$effect(() => {
+		// Zooming out happens only when revealing the answer, and happens here.
+		// Zooming back in is handled in drawMap. Doing it here as well conflicts with drawMap
+		// and makes everything go bonkers. So far, restricing the unzoom feature to this unique
+		// behavior is not a problem.
+		if (!geo || !unzoom) return;
+		map.setZoom(12);
+	});
 
 	const drawMap = async () => {
 		if (!geo) return;
