@@ -164,13 +164,13 @@ const insertData = db.transaction((stops) => {
 			details.arrfarezone = 'Hors IDF';
 		}
 		if (stop.res_com === 'TER') return; // Ignoring TER-only stops
-		const plainName = plainify(stop.nom_zda as string);
+		const plainName = plainify(stop.nom_long as string);
 		const stopLines = parseLines(stop.res_com as string);
 		const modes = stop.mode as string;
 		const geo = `${(stop.geo_point_2d as any).lon},${(stop.geo_point_2d as any).lat}`;
 		insertStop.run(
 			String(stop.id_ref_zda),
-			stop.nom_zda,
+			stop.nom_long,
 			plainName,
 			stopLines.join(','),
 			details.arrtown,
