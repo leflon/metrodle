@@ -36,11 +36,12 @@
 		});
 		L.geoJSON(geo.features, {
 			style: (feature) => {
+				const mode = feature?.properties.mode;
 				return {
 					// TER lines included in the GeoJSON dataset might appear over regular
 					// lines, hiding their color.
-					opacity: feature?.properties.mode === 'TER' ? 0 : 1,
-					weight: 5,
+					opacity: mode === 'TER' ? 0 : 1,
+					weight: mode === 'METRO' || mode === 'TRAMWAY' ? 5 : 7, // thicker lines for heavy rail lines
 					color: showColors ? '#' + feature?.properties.colourweb_hexa : 'black'
 				};
 			}
