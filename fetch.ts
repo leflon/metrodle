@@ -1,7 +1,6 @@
 import Database from 'better-sqlite3';
 import { createReadStream, statSync, writeFileSync } from 'fs';
 import { plainify } from './src/lib/utils.ts';
-import { writeFile } from 'fs/promises';
 
 const db = new Database('data/idfm.db');
 db.exec('PRAGMA journal_mode = WAL');
@@ -154,8 +153,16 @@ function parseMode(mode: string): string {
 
 const insertData = db.transaction((stops) => {
 	stops.map((stop: Datapoint) => {
-		const details = stopDetails.find((s) => s.zdaid === String(stop.id_ref_zda));
-		if (!details) return;
+		let details = stopDetails.find(
+			(s) => s.zdaid === String(stop.id_ref_zda) && s.arrfarezone !== null
+		);
+		if (!details) {
+			// Stop is out of Ile-de-France, fetch without farezone constraint
+			// and set it manually.
+			details = stopDetails.find((s) => s.zdaid === String(stop.id_ref_zda));
+			if (!details) return console.log('No details for', stop.nom_zda, stop.res_com);
+			details.arrfarezone = 'Hors IDF';
+		}
 		if (stop.res_com === 'TER') return; // Ignoring TER-only stops
 		const plainName = plainify(stop.nom_zda as string);
 		const stopLines = parseLines(stop.res_com as string);
