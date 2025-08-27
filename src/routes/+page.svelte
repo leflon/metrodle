@@ -98,7 +98,6 @@
 	/>
 	<title>Metrodle</title>
 </svelte:head>
-<div class="beta">BETA</div>
 <img
 	class="main-logo"
 	src="/images/1x/full-logo.webp"
@@ -180,18 +179,6 @@
 		max-width: 80%;
 		object-fit: contain;
 		margin: 20px auto;
-	}
-
-	.beta {
-		position: fixed;
-		background: #9e0000;
-		color: white;
-		font: 14pt 'Parisine';
-		padding: 5px 40px;
-		transform: rotate(45deg) translate(25%, -40%);
-		top: 0;
-		right: 0;
-		z-index: 99;
 	}
 
 	.start-hint {
