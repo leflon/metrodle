@@ -10,7 +10,7 @@
 	let geo: { features: any; center: [number, number]; isConnecting: boolean } | null = $state(null);
 
 	type Props = {
-		stop: string;
+		stop: string | null;
 		unzoom: boolean;
 	};
 	let { stop, unzoom }: Props = $props();
@@ -60,6 +60,7 @@
 	});
 
 	$effect(() => {
+		if (!stop) return;
 		getMinimapFeatures(stop).then((result) => {
 			geo = result;
 			if (!geo) return;
@@ -88,6 +89,8 @@
 <style scoped>
 	div {
 		width: 300px;
+		max-width: 95%;
+		background: #eee;
 		height: 300px;
 		overflow: hidden;
 		margin: 10px auto;

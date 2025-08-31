@@ -3,7 +3,7 @@
 	const commit = import.meta.env.VITE_GIT_COMMIT_HASH;
 	const buildTime = import.meta.env.VITE_BUILD_TIME;
 
-	const githubHref = `https://github.com/leflon/metrodle/`;
+	const githubHref = `https://github.com/leflon/metrodle`;
 	const commitHref = `${githubHref}/commit/${commit}`;
 </script>
 

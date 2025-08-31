@@ -108,9 +108,10 @@
 	height={100}
 />
 <SettingsSelector editable={canEditSettings} />
-{#if toGuess && $storage.showMap}
+{#if $storage.showMap}
 	<MiniMap stop={toGuess} unzoom={unzoomMap} />
 {/if}
+
 <div class={'input-container ' + inputContainerClass} bind:this={inputContainer}>
 	<div class="input-container-blur"></div>
 	<StopInput bind:selected={selectedStop} disabled={hasWon || hasForfeited} />
