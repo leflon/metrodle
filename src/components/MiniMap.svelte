@@ -78,9 +78,15 @@
 			keyboard: false,
 			touchZoom: false
 		});
-		L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-			attribution: 'Carto'
-		}).addTo(map);
+		const tiles = L.tileLayer(
+			'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+			{
+				attribution: 'Carto'
+			}
+		).addTo(map);
+		tiles.addEventListener('tileload', (e) => {
+			e.tile.setAttribute('fetchpriority', 'high');
+		});
 	});
 </script>
 
