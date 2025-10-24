@@ -48,7 +48,7 @@ This project relies on the **Ile-de-France Mobilités OpenData API** to retrieve
 
 To populate your SQLite database with this data, run the **fetch.js** script:
 ```bash
-npm fetch.js [--wipe|-w] [--local|-l]
+node fetch.js [--wipe|-w] [--local|-l]
 ```
 **Arguments:**
  - `--wipe, -w`: Wipes the previous content of your database. By default, it will keep everything as it an only add new entries.
