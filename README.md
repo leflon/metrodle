@@ -38,23 +38,9 @@ gh repo clone leflon/metrodle
 ```
 
 ### Install environment
-
-This project was built **for Bun** and relies on `bun:sqlite` to work. 
-
-*If you do not have Bun installed:*
-
-**Linux & MacOS**
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-**Windows**
-```bash
-powershell -c "irm bun.sh/install.ps1 | iex"
-```
-
 ### Install dependencies
 ```bash
-bun install
+npm install
 ```
 
 ### Fetch necessary data
@@ -63,7 +49,7 @@ This project relies on the **Ile-de-France Mobilités OpenData API** to retrieve
 
 To populate your SQLite database with this data, run the **fetch.js** script:
 ```bash
-bun fetch.js [--wipe|-w] [--local|-l]
+npm fetch.js [--wipe|-w] [--local|-l]
 ```
 **Arguments:**
  - `--wipe, -w`: Wipes the previous content of your database. By default, it will keep everything as it an only add new entries.
@@ -74,7 +60,7 @@ Rename `.env.example` to `.env` and fill in the values.
 
 ### Start the dev environment
 ```bash
-bun run dev
+npm run dev
 ```
 
 ## Author
