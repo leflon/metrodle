@@ -3,7 +3,6 @@
   <h2 align='center'>Wordle for Paris Metro stations</h2>
 </p>
 <p align='center'>  
-  <img src='https://img.shields.io/badge/BUN-F472B6?logo=bun&style=for-the-badge'>
   <img src="https://img.shields.io/badge/typescript-3178c6?logo=typescript&style=for-the-badge&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/svelte-F63B01?logo=svelte&style=for-the-badge&logoColor=white" alt="Svelte">
   <img src="https://img.shields.io/badge/sqlite-1179C8?logo=sqlite&style=for-the-badge&logoColor=white" alt="SQLite">
